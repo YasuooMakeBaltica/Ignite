@@ -552,12 +552,16 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 51, 71, 0.6); } 50% { box-shadow: 0 0 0 6px rgba(255, 51, 71, 0); } }
 @keyframes ticker { to { transform: translateX(-50%); } }
 
-/* Reduced motion: autoplay motion stops (idle spin, ticker, pulse, entrance
-   fades). Scroll-linked effects still follow the visitor's own scrolling. */
+/* Reduced motion: endless loops (ticker, pulse, idle spin) stop and the
+   entrances become short, gentle fades with no big movement, so the page
+   still feels alive. Add ?motion=full to the URL to preview full motion. */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .js .hero-copy > * { opacity: 1; transform: none; filter: none; }
+  html:not(.motion-full) { scroll-behavior: auto; }
+  html:not(.motion-full) .ticker-track,
+  html:not(.motion-full) .dot { animation: none; }
+  .js:not(.motion-full) [data-fx] { --fx-from: translateY(14px); }
+  .js:not(.motion-full) [data-fx].in { animation-duration: 0.6s; }
+  .js:not(.motion-full) .hero-copy > * { animation-duration: 0.6s; }
 }
 
 /* Responsive */

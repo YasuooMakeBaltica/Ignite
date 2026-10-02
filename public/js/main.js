@@ -2,7 +2,11 @@
   var root = document.documentElement;
   root.classList.add("js");
 
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Reduced motion softens the animations rather than removing them. Adding
+  // ?motion=full to the URL ignores the system setting, which helps with testing.
+  var forceFull = /[?&]motion=full(&|$)/.test(window.location.search);
+  var reduceMotion = !forceFull && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (forceFull) root.classList.add("motion-full");
 
   function clamp01(n) { return Math.min(1, Math.max(0, n)); }
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -112,7 +116,8 @@
   // straight to element transforms, so the browser never restyles the subtree.
   // Spheres counter-rotate the chain of parent rotations to face the camera.
   // ------------------------------------------------------------------
-  var INTRO_MS = 2600;
+  var INTRO_MS = reduceMotion ? 1400 : 2600;
+  var INTRO_SCALE = reduceMotion ? 0.3 : 1; // how far the intro swings and whirls
 
   var scene = art.querySelector(".scene");
   var glow = art.querySelector(".glow");
@@ -144,11 +149,11 @@
     var e = easeOutQuart(intro);
     var rest = 1 - e;
     var idle = reduceMotion ? 0 : ((now / 60000) * 360) % 360;
-    var rx = lerp(52, 16, e) - pointer.y * 7;
-    var ry = lerp(-210, -24, e) + pointer.x * 9;
+    var rx = lerp(16 + 36 * INTRO_SCALE, 16, e) - pointer.y * 7;
+    var ry = lerp(-24 - 186 * INTRO_SCALE, -24, e) + pointer.x * 9;
     var fade = clamp01(intro * 2.2);
 
-    scene.style.transform = "rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) scale(" + lerp(0.5, 1, e).toFixed(3) + ")";
+    scene.style.transform = "rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) scale(" + lerp(lerp(1, 0.5, INTRO_SCALE), 1, e).toFixed(3) + ")";
     glow.style.opacity = (fade * 0.9).toFixed(3);
 
     core.style.transform = "rotateY(" + (-ry).toFixed(2) + "deg) rotateX(" + (-rx).toFixed(2) + "deg)";
@@ -156,7 +161,7 @@
 
     orbits.forEach(function (o) {
       // Planets whirl in on the intro, then orbit steadily
-      var ang = idle * o.sp + rest * o.turns * 540;
+      var ang = idle * o.sp + rest * o.turns * 540 * INTRO_SCALE;
       o.arm.style.transform = "rotateZ(" + ang.toFixed(2) + "deg)";
       o.body.style.transform =
         "translateX(" + (o.d / 2) + "cqw) rotateZ(" + (-ang).toFixed(2) + "deg) rotateY(" + (-o.oy) + "deg) rotateX(" + (-o.ox) + "deg) rotateY(" + (-ry).toFixed(2) + "deg) rotateX(" + (-rx).toFixed(2) + "deg)";
@@ -165,7 +170,7 @@
     });
 
     cube.style.transform =
-      "translate3d(-34cqw, -30cqw, 18cqw) rotateX(" + (idle * 1.3 + rest * 420).toFixed(2) + "deg) rotateY(" + (idle * 1.8 + rest * 600).toFixed(2) + "deg)";
+      "translate3d(-34cqw, -30cqw, 18cqw) rotateX(" + (idle * 1.3 + rest * 420 * INTRO_SCALE).toFixed(2) + "deg) rotateY(" + (idle * 1.8 + rest * 600 * INTRO_SCALE).toFixed(2) + "deg)";
     var faceOpacity = (fade * 0.9).toFixed(3);
     cubeFaces.forEach(function (f) { f.style.opacity = faceOpacity; });
   }
@@ -179,7 +184,7 @@
     var dt = lastTime ? Math.min(64, now - lastTime) : 16;
     lastTime = now;
 
-    var intro = reduceMotion ? 1 : clamp01((now - startTime) / INTRO_MS);
+    var intro = clamp01((now - startTime) / INTRO_MS);
     var kPointer = 1 - Math.exp(-dt / 160);
     var moving = intro < 1;
 
@@ -234,7 +239,7 @@
   // Start
   // ------------------------------------------------------------------
   measure();
-  renderHero(performance.now(), reduceMotion ? 1 : 0);
+  renderHero(performance.now(), 0);
   kick();
 
   window.addEventListener("scroll", onScroll, { passive: true });
