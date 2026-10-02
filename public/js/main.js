@@ -3,14 +3,12 @@
   root.classList.add("js");
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var pinQuery = window.matchMedia("(min-width: 901px) and (min-height: 641px)");
+
+  function clamp01(n) { return Math.min(1, Math.max(0, n)); }
 
   // Header state on scroll
   var header = document.getElementById("site-header");
-  function onScroll() {
-    header.classList.toggle("scrolled", window.scrollY > 8);
-  }
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
 
   // Mobile menu
   var toggle = document.getElementById("menu-toggle");
@@ -30,7 +28,7 @@
     if (e.key === "Escape") setMenu(false);
   });
 
-  // Reveal on scroll, staggered by position within each group
+  // Reveal on scroll for the flowing layout (small screens), staggered by position in each group
   var revealEls = document.querySelectorAll(".reveal");
   revealEls.forEach(function (el) {
     var siblings = Array.prototype.filter.call(el.parentElement.children, function (n) {
@@ -52,81 +50,150 @@
     revealEls.forEach(function (el) { el.classList.add("in"); });
   }
 
-  // Active nav link
-  var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
-  var sections = links
-    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
-    .filter(Boolean);
-  if ("IntersectionObserver" in window) {
-    var navObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          links.forEach(function (a) {
-            a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id);
-          });
-        }
-      });
-    }, { rootMargin: "-45% 0px -50% 0px" });
-    sections.forEach(function (s) { navObserver.observe(s); });
-  }
-
-  // Hero pointer parallax
-  var art = document.getElementById("hero-art");
-  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (art && finePointer && !reduceMotion) {
-    var heroEl = art.closest(".hero");
-    heroEl.addEventListener("mousemove", function (e) {
-      var r = heroEl.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - 0.5;
-      var y = (e.clientY - r.top) / r.height - 0.5;
-      art.style.setProperty("--mx", (x * 2).toFixed(3));
-      art.style.setProperty("--my", (y * 2).toFixed(3));
-    });
-    heroEl.addEventListener("mouseleave", function () {
-      art.style.setProperty("--mx", 0);
-      art.style.setProperty("--my", 0);
-    });
-  }
-
-  // Scroll-driven hero and page progress bar, eased for a smooth feel
-  var hero = document.getElementById("top");
+  // ------------------------------------------------------------------
+  // Scroll engine: pinned sections, hero scene and progress bar.
+  // Targets are computed from the scroll position, then eased toward each frame.
+  // ------------------------------------------------------------------
   var progress = document.getElementById("scroll-progress");
-  var heroTarget = 0;
-  var heroCurrent = 0;
+  var pins = Array.prototype.slice.call(document.querySelectorAll(".pin")).map(function (el) {
+    var inner = el.querySelector(".pin-inner");
+    return {
+      el: el,
+      inner: inner,
+      hero: el.classList.contains("pin-hero") ? el.querySelector(".hero") : null,
+      noExit: el.classList.contains("pin-contact") || el.classList.contains("pin-hero"),
+      nav: el.getAttribute("data-nav"),
+      q: 0, out: 0, pre: 0, tq: 0, tout: 0, tpre: 0
+    };
+  });
+  var navLinks = Array.prototype.slice.call(nav.querySelectorAll("a"));
+
+  var heroPin = pins.filter(function (p) { return p.hero; })[0];
+  var pinOn = false;
   var running = false;
 
-  function clamp01(n) { return Math.min(1, Math.max(0, n)); }
+  function setPinMode() {
+    pinOn = pinQuery.matches;
+    root.classList.toggle("pin-on", pinOn);
+  }
+
+  function computeTargets() {
+    var y = window.scrollY;
+    var headerH = header.offsetHeight;
+
+    header.classList.toggle("scrolled", y > 8);
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.setProperty("--page", max > 0 ? clamp01(y / max).toFixed(4) : 0);
+
+    var activeNav = null;
+    pins.forEach(function (p) {
+      if (pinOn) {
+        var top = p.el.getBoundingClientRect().top;
+        var dist = p.el.offsetHeight - p.inner.offsetHeight;
+        p.tq = dist > 0 ? clamp01((headerH - top) / dist) : 1;
+        p.tout = p.noExit ? 0 : clamp01((p.tq - 0.8) / 0.2);
+        // Approach progress: 0 while the track is below 80% of the screen, 1 once it reaches the header
+        p.tpre = clamp01((window.innerHeight * 0.8 - top) / (window.innerHeight * 0.8 - headerH));
+        if (p.nav && top < window.innerHeight * 0.5 && top + p.el.offsetHeight > window.innerHeight * 0.5) {
+          activeNav = p.nav;
+        }
+      } else {
+        p.tq = 1;
+        p.tout = 0;
+        p.tpre = 1;
+        if (p === heroPin) {
+          // Flowing layout: drive the hero scene from the first screen of scrolling
+          p.tq = clamp01(y / (p.el.offsetHeight * 0.9));
+        }
+      }
+    });
+
+    navLinks.forEach(function (a) {
+      a.classList.toggle("active", a.getAttribute("href") === "#" + activeNav);
+    });
+  }
+
+  function apply(p) {
+    p.el.style.setProperty("--q", p.q.toFixed(4));
+    p.el.style.setProperty("--out", p.out.toFixed(4));
+    p.el.style.setProperty("--pre", p.pre.toFixed(4));
+    if (p.hero) p.hero.style.setProperty("--p", p.q.toFixed(4));
+  }
 
   function frame() {
-    var diff = heroTarget - heroCurrent;
-    heroCurrent = Math.abs(diff) < 0.0005 ? heroTarget : heroCurrent + diff * 0.14;
-    hero.style.setProperty("--p", heroCurrent.toFixed(4));
-    if (heroCurrent !== heroTarget) {
+    var moving = false;
+    pins.forEach(function (p) {
+      var dq = p.tq - p.q;
+      var dout = p.tout - p.out;
+      var dpre = p.tpre - p.pre;
+      if (reduceMotion) {
+        p.q = p.tq;
+        p.out = p.tout;
+        p.pre = p.tpre;
+      } else {
+        p.q = Math.abs(dq) < 0.0006 ? p.tq : p.q + dq * 0.13;
+        p.out = Math.abs(dout) < 0.0006 ? p.tout : p.out + dout * 0.13;
+        p.pre = Math.abs(dpre) < 0.0006 ? p.tpre : p.pre + dpre * 0.13;
+      }
+      if (p.q !== p.tq || p.out !== p.tout || p.pre !== p.tpre) moving = true;
+      apply(p);
+    });
+    if (pointer.x !== pointer.tx || pointer.y !== pointer.ty) {
+      pointer.x = Math.abs(pointer.tx - pointer.x) < 0.001 ? pointer.tx : pointer.x + (pointer.tx - pointer.x) * 0.08;
+      pointer.y = Math.abs(pointer.ty - pointer.y) < 0.001 ? pointer.ty : pointer.y + (pointer.ty - pointer.y) * 0.08;
+      art.style.setProperty("--mx", pointer.x.toFixed(3));
+      art.style.setProperty("--my", pointer.y.toFixed(3));
+      moving = true;
+    }
+    if (moving) {
       window.requestAnimationFrame(frame);
     } else {
       running = false;
     }
   }
 
-  function updateScroll() {
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : 0);
-    heroTarget = clamp01(window.scrollY / (hero.offsetHeight * 0.9));
-    if (reduceMotion) {
-      // No easing for reduced motion: follow the scroll position directly.
-      heroCurrent = heroTarget;
-      hero.style.setProperty("--p", heroCurrent.toFixed(4));
-      return;
-    }
+  function kick() {
     if (!running) {
       running = true;
       window.requestAnimationFrame(frame);
     }
   }
 
-  updateScroll();
-  window.addEventListener("scroll", updateScroll, { passive: true });
-  window.addEventListener("resize", updateScroll);
+  function onScroll() {
+    computeTargets();
+    kick();
+  }
+
+  // Pointer parallax for the hero scene (eased, desktop only)
+  var art = document.getElementById("hero-art");
+  var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (art && finePointer && !reduceMotion && heroPin) {
+    heroPin.el.addEventListener("mousemove", function (e) {
+      var r = heroPin.el.getBoundingClientRect();
+      pointer.tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      pointer.ty = ((e.clientY - r.top) / Math.max(1, Math.min(r.height, window.innerHeight)) - 0.5) * 2;
+      kick();
+    });
+    heroPin.el.addEventListener("mouseleave", function () {
+      pointer.tx = 0;
+      pointer.ty = 0;
+      kick();
+    });
+  }
+
+  setPinMode();
+  computeTargets();
+  pins.forEach(function (p) { p.q = p.tq; p.out = p.tout; p.pre = p.tpre; apply(p); });
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", function () {
+    setPinMode();
+    onScroll();
+  });
+  if (pinQuery.addEventListener) {
+    pinQuery.addEventListener("change", function () { setPinMode(); onScroll(); });
+  }
 
   // Discord link: the server redirects back here until an invite is configured
   var note = document.getElementById("discord-note");

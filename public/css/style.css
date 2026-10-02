@@ -20,9 +20,16 @@
   --header-h: 72px;
 }
 
+/* Animatable angle used for the idle spin of the 3D scene */
+@property --idle {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); overflow-x: clip; }
 
 body {
   background: var(--bg);
@@ -30,7 +37,7 @@ body {
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -103,7 +110,7 @@ ul, ol { list-style: none; }
   font-family: inherit;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 .btn:active { transform: translateY(1px); }
 .btn-small { padding: 0.6rem 1.15rem; font-size: 0.875rem; }
@@ -126,18 +133,64 @@ ul, ol { list-style: none; }
 .btn-outline { border-color: var(--border); color: var(--text); background: transparent; }
 .btn-outline:hover { border-color: var(--red); color: #fff; transform: translateY(-2px); box-shadow: 0 10px 28px -10px rgba(255, 51, 71, 0.5); }
 
-/* Hero */
+/* ------------------------------------------------------------------
+   Pinned scroll sections
+   Each .pin is a tall track. Its .pin-inner sticks to the screen while
+   you scroll through the track, and JS feeds scroll progress into CSS:
+     --q    progress through the track, 0 to 1
+     --out  exit progress, 0 to 1 (set only near the end of the track)
+   Without .pin-on (small screens) everything is a normal flowing page.
+------------------------------------------------------------------- */
+.pin { position: relative; --q: 1; --out: 0; --pre: 0; --qe: calc(var(--q) + var(--pre) * 0.14); }
+.pin-hero { --len: 1.9; }
+.pin-services { --len: 2.7; }
+.pin-process { --len: 2.4; }
+.pin-contact { --len: 1.8; }
+.pin-anchor { position: absolute; top: 0; left: 0; width: 1px; height: 1px; pointer-events: none; }
+
+.pin-on .pin { height: calc((100vh - var(--header-h)) * var(--len)); }
+.pin-on .pin-inner {
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: clip;
+}
+.pin-on .pin:not(.pin-hero) .pin-inner { padding-block: 1.5rem; }
+.pin-on .pin-anchor { top: calc(0.42 * (var(--len) - 1) * (100vh - var(--header-h))); }
+
+.pin-on .stage {
+  width: 100%;
+  opacity: calc(1 - var(--out));
+  transform: translateY(calc(var(--out) * -60px)) scale(calc(1 - var(--out) * 0.08));
+  filter: blur(calc(var(--out) * 6px));
+  will-change: transform, opacity;
+}
+.pin-on .pin-contact .stage { opacity: 1; transform: none; filter: none; }
+
+.js.pin-on .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+
+.stage > * { max-width: var(--max); margin-inline: auto; }
+
+/* ------------------------------------------------------------------
+   Hero
+------------------------------------------------------------------- */
 .hero {
+  --p: 0;
   position: relative;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   align-items: center;
   gap: 3rem;
   max-width: var(--max);
+  width: 100%;
   margin: 0 auto;
   min-height: calc(100vh - var(--header-h));
-  padding: 4rem var(--gutter) 5rem;
+  padding: 3rem var(--gutter);
 }
+.pin-on .hero { min-height: 0; height: 100%; }
 
 .eyebrow {
   display: inline-flex;
@@ -169,6 +222,8 @@ h1 {
 
 .accent {
   background-image: var(--grad-yellow);
+  background-size: 200% 100%;
+  background-position: calc(var(--p) * 100%) 0;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -189,48 +244,12 @@ h1 {
   font-weight: 500;
 }
 
-/* Hero art */
-.hero-art {
-  position: relative;
-  width: 100%;
-  max-width: 460px;
-  aspect-ratio: 1;
-  justify-self: end;
-  --mx: 0;
-  --my: 0;
+/* Hero text drifts up and softens as the scene takes over */
+.hero-copy {
+  opacity: calc(1 - clamp(0, calc((var(--p) - 0.1) * 1.5), 1));
+  filter: blur(calc(var(--p) * 5px));
+  will-change: opacity, filter;
 }
-
-.glow {
-  position: absolute;
-  inset: -12%;
-  background: radial-gradient(closest-side, rgba(255, 51, 71, 0.22), rgba(255, 51, 71, 0) 70%);
-  filter: blur(8px);
-}
-
-.layer {
-  position: absolute;
-  display: block;
-  translate: calc(var(--mx) * var(--depth) * 1px) calc(var(--my) * var(--depth) * 1px);
-  transition: translate 0.25s ease-out;
-}
-.shape { display: block; width: 100%; height: 100%; animation: float var(--dur, 7s) ease-in-out infinite; }
-
-.layer-1 { --depth: 22; top: 0; right: 0; width: 72%; height: 72%; }
-.layer-2 { --depth: -30; bottom: 3%; left: 2%; width: 46%; height: 46%; }
-.layer-3 { --depth: 38; bottom: 0; right: 6%; width: 32%; height: 32%; }
-.layer-4 { --depth: -18; top: 6%; left: 8%; width: 26%; height: 26%; }
-.layer-5 { --depth: 48; top: 46%; left: 40%; width: 7%; height: 7%; }
-
-.shape-red { border-radius: 50%; background: var(--grad-red); box-shadow: 0 30px 70px -20px rgba(255, 51, 71, 0.55); --dur: 8s; }
-.shape-yellow { border-radius: 50%; background: var(--grad-yellow); box-shadow: 0 24px 60px -20px rgba(242, 169, 0, 0.5); --dur: 6.5s; animation-delay: -2s; }
-.shape-square { border-radius: var(--radius); border: 2px solid var(--text); backdrop-filter: blur(4px); --dur: 9s; animation-delay: -4s; }
-.shape-ring { border-radius: 50%; border: 2px solid var(--yellow); --dur: 7.5s; animation-delay: -1s; }
-.shape-dot { border-radius: 50%; background: var(--text); --dur: 5s; }
-
-/* Scroll-driven hero. --p eases from 0 to 1 as the hero scrolls out of view. */
-.hero { --p: 0; perspective: 900px; }
-
-.hero-copy { opacity: calc(1 - var(--p) * 1.3); filter: blur(calc(var(--p) * 4px)); will-change: opacity, filter; }
 .hero-copy > * { translate: 0 calc(var(--p) * var(--k, -40) * 1px); }
 .hero-copy > :nth-child(1) { --k: -20; }
 .hero-copy > :nth-child(2) { --k: -45; }
@@ -239,25 +258,143 @@ h1 {
 .hero-copy > :nth-child(5) { --k: -120; }
 .hero-copy > :nth-child(6) { --k: -145; }
 
-/* No opacity or filter on .hero-art itself: either one would flatten the 3D tilt. */
+/* ------------------------------------------------------------------
+   Hero 3D scene
+   A glowing core with three tilted orbits, a rotating cube and a camera
+   that swings around the whole scene as you scroll (--p, 0 to 1).
+   Spheres are billboarded: each one counter-rotates the whole chain of
+   parent rotations so it always faces the camera and reads as a sphere.
+   Never put opacity or filter on an element that contains 3D children,
+   because that flattens the scene.
+------------------------------------------------------------------- */
 .hero-art {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1;
+  justify-self: end;
+  container-type: inline-size;
+  perspective: 1100px;
+  --mx: 0;
+  --my: 0;
+  --fade: calc(1 - clamp(0, calc((var(--p) - 0.82) * 5.5), 1));
+  animation: idle 60s linear infinite;
+}
+
+.glow {
+  position: absolute;
+  inset: -18%;
+  background: radial-gradient(closest-side, rgba(255, 51, 71, 0.3), rgba(255, 51, 71, 0.08) 55%, rgba(255, 51, 71, 0) 75%);
+  opacity: calc(var(--fade) * (0.6 + var(--p) * 0.6));
+  pointer-events: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
   transform-style: preserve-3d;
-  transform: translateY(calc(var(--p) * 20px)) rotateX(calc(var(--p) * 62deg)) rotateY(calc(var(--p) * -16deg)) scale(calc(1 - var(--p) * 0.12));
+  --rx: calc(16deg + var(--p) * 34deg - var(--my) * 7deg);
+  --ry: calc(-24deg + var(--p) * 210deg + var(--mx) * 9deg);
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) scale(calc(1 + var(--p) * 0.14));
   will-change: transform;
 }
-.layer {
-  transform: translate3d(0, calc(var(--p) * var(--speed, 0) * 1px), calc(var(--p) * var(--z, 0) * 1px)) rotate(calc(var(--p) * var(--spin, 0) * 1deg));
-  opacity: calc(1 - var(--p) * 0.9);
-  filter: blur(calc(var(--p) * 3px));
-}
-.glow { opacity: calc(1 - var(--p) * 0.9); }
-.layer-1 { --speed: 60; --spin: 25; --z: -120; }
-.layer-2 { --speed: -50; --spin: -40; --z: 120; }
-.layer-3 { --speed: 110; --spin: 70; --z: 220; }
-.layer-4 { --speed: -90; --spin: 100; --z: 60; }
-.layer-5 { --speed: 160; --z: 300; }
 
-.accent { background-size: 200% 100%; background-position: calc(var(--p) * 100%) 0; }
+.core {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 34cqw; height: 34cqw;
+  margin: -17cqw 0 0 -17cqw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ff9a7a 0%, var(--red) 38%, #a30f20 100%);
+  box-shadow: inset -12px -14px 30px rgba(60, 0, 10, 0.5);
+  transform: rotateY(calc(-1 * var(--ry))) rotateX(calc(-1 * var(--rx)));
+  opacity: var(--fade);
+}
+
+.orbit {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--d); height: var(--d);
+  margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--ox)) rotateY(var(--oy));
+}
+.orbit-1 { --d: 88cqw; --ox: 68deg; --oy: -14deg; --sp: 1; --turns: 1; }
+.orbit-2 { --d: 64cqw; --ox: 60deg; --oy: 58deg; --sp: -1.6; --turns: -1.4; }
+.orbit-3 { --d: 102cqw; --ox: 78deg; --oy: 28deg; --sp: 0.7; --turns: 0.8; }
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(246, 243, 236, 0.17);
+  border-radius: 50%;
+  opacity: var(--fade);
+}
+
+.arm {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  --ang: calc(var(--idle) * var(--sp, 1) + var(--p) * var(--turns, 1) * 360deg);
+  transform: rotateZ(var(--ang));
+}
+
+.body {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--s); height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  border-radius: 50%;
+  transform:
+    translateX(calc(var(--d) / 2))
+    rotateZ(calc(-1 * var(--ang)))
+    rotateY(calc(-1 * var(--oy)))
+    rotateX(calc(-1 * var(--ox)))
+    rotateY(calc(-1 * var(--ry)))
+    rotateX(calc(-1 * var(--rx)));
+  opacity: var(--fade);
+}
+.body-yellow {
+  --s: 15cqw;
+  background: radial-gradient(circle at 32% 28%, #ffe7a0 0%, var(--yellow-2) 35%, var(--yellow) 70%, #8a5a00 100%);
+  box-shadow: inset -6px -8px 16px rgba(90, 50, 0, 0.45);
+}
+.body-ember {
+  --s: 8cqw;
+  background: radial-gradient(circle at 32% 28%, #ffd0b0 0%, var(--red-2) 40%, var(--red) 100%);
+  box-shadow: inset -3px -4px 8px rgba(80, 10, 10, 0.4);
+}
+.body-dot {
+  --s: 3.6cqw;
+  background: var(--text);
+}
+
+.cube {
+  --cs: 15cqw;
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--cs); height: var(--cs);
+  margin: calc(var(--cs) / -2) 0 0 calc(var(--cs) / -2);
+  transform-style: preserve-3d;
+  transform:
+    translate3d(-34cqw, -30cqw, 18cqw)
+    rotateX(calc(var(--idle) * 1.3 + var(--p) * 300deg))
+    rotateY(calc(var(--idle) * 1.8 + var(--p) * 420deg));
+}
+.cube i {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--text);
+  border-radius: 4px;
+  background: rgba(246, 243, 236, 0.04);
+  opacity: calc(var(--fade) * 0.9);
+}
+.cube i:nth-child(1) { transform: translateZ(calc(var(--cs) / 2)); }
+.cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--cs) / 2)); }
+.cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--cs) / 2)); }
+.cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--cs) / 2)); }
+.cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--cs) / 2)); }
+.cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--cs) / 2)); }
 
 /* Ticker */
 .ticker {
@@ -265,6 +402,8 @@ h1 {
   border-block: 1px solid var(--border);
   background: var(--surface);
   padding: 1.1rem 0;
+  position: relative;
+  z-index: 2;
 }
 .ticker-track {
   display: flex;
@@ -293,10 +432,13 @@ h1 {
 
 /* Sections */
 .section { padding: clamp(4.5rem, 10vw, 8rem) var(--gutter); }
-.section > * { max-width: var(--max); margin-inline: auto; }
+.section > :not(.pin-inner):not(.pin-anchor) { max-width: var(--max); margin-inline: auto; }
+.pin-on .section { padding: 0; }
+.pin-on .section > .pin-inner { padding-inline: var(--gutter); }
 .section-alt { background: var(--surface); border-block: 1px solid var(--border); }
 
 .section-head { margin-bottom: 3.25rem; }
+.pin-on .section-head { margin-bottom: clamp(1.5rem, 4vh, 3.25rem); }
 .kicker {
   display: inline-block;
   margin-bottom: 1rem;
@@ -339,7 +481,7 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
   transform-origin: left;
   transition: transform 0.3s ease;
 }
-.card:hover { transform: translateY(-6px); border-color: #3a3a42; background: var(--surface-2); }
+.card:hover { border-color: #3a3a42; background: var(--surface-2); }
 .card:hover::before { transform: scaleX(1); }
 
 .card-num {
@@ -356,24 +498,30 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 .card p { margin-top: 0.7rem; color: var(--muted); font-size: 0.96rem; }
 
 /* Process */
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; counter-reset: step; position: relative; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; position: relative; }
 
 .step { position: relative; padding-top: 0.5rem; }
 .step-num {
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   width: 46px; height: 46px;
   margin-bottom: 1.4rem;
   border-radius: 50%;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--border);
   font-weight: 700;
   color: var(--yellow-2);
-  position: relative;
-  z-index: 1;
-  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
-.step:hover .step-num { background: var(--grad-red); color: #fff; border-color: transparent; }
+.step-num::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--bg);
+  z-index: -1;
+}
+.step-num b { font-weight: 700; }
 .step:not(:last-child)::after {
   content: "";
   position: absolute;
@@ -409,7 +557,6 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 }
 .contact > * { position: relative; }
 
-
 .discord-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; text-align: center; }
 .discord-note { font-size: 0.92rem; color: var(--yellow-2); }
 .discord-note:empty { display: none; }
@@ -439,7 +586,9 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 }
 .footer-brand { color: var(--text); font-weight: 700; }
 
-/* Motion */
+/* ------------------------------------------------------------------
+   Load-in motion and flowing-page reveals (small screens / no pinning)
+------------------------------------------------------------------- */
 .js .hero-copy > * { opacity: 0; transform: translateY(16px); animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
 .js .hero-copy > *:nth-child(2) { animation-delay: 0.08s; }
 .js .hero-copy > *:nth-child(3) { animation-delay: 0.16s; }
@@ -458,22 +607,60 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 .js .step::after { transform: scaleX(0); transform-origin: left; transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--i, 0) * 90ms + 300ms); }
 .js .step.in::after { transform: scaleX(1); }
 
+/* ------------------------------------------------------------------
+   Pinned entrances (must come after the reveal rules above)
+   --c is each item's own progress, 0 to 1, staggered by --s.
+------------------------------------------------------------------- */
+.js.pin-on .pin-services .section-head,
+.js.pin-on .pin-process .section-head {
+  --c: clamp(0, calc(var(--qe) * 6), 1);
+  opacity: var(--c);
+  transform: translateY(calc((1 - var(--c)) * 60px));
+  filter: blur(calc((1 - var(--c)) * 8px));
+}
+
+.js.pin-on .cards, .js.pin-on .steps { perspective: 1000px; }
+
+.js.pin-on .card, .js.pin-on .step {
+  --c: clamp(0, calc((var(--qe) - var(--s)) * 7), 1);
+  opacity: var(--c);
+  transform: translateY(calc((1 - var(--c)) * 90px)) rotateX(calc((1 - var(--c)) * 28deg)) scale(calc(0.9 + var(--c) * 0.1));
+  filter: blur(calc((1 - var(--c)) * 6px));
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.js.pin-on .card:nth-child(1) { --s: 0.08; }
+.js.pin-on .card:nth-child(2) { --s: 0.17; }
+.js.pin-on .card:nth-child(3) { --s: 0.26; }
+.js.pin-on .card:nth-child(4) { --s: 0.35; }
+.js.pin-on .card:hover { transform: translateY(-6px) scale(1); }
+
+.js.pin-on .step:nth-child(1) { --s: 0.1; }
+.js.pin-on .step:nth-child(2) { --s: 0.26; }
+.js.pin-on .step:nth-child(3) { --s: 0.42; }
+.js.pin-on .step:nth-child(4) { --s: 0.58; }
+
+.js.pin-on .step-num { background: conic-gradient(var(--red) calc(var(--c) * 360deg), var(--border) 0); }
+.js.pin-on .step::after { transform: scaleX(var(--c)); transform-origin: left; transition: none; background: var(--red); }
+
+.js.pin-on .pin-contact .contact {
+  --c: clamp(0, calc(var(--qe) * 3.2), 1);
+  opacity: var(--c);
+  transform: perspective(1200px) translateY(calc((1 - var(--c)) * 90px)) rotateX(calc((1 - var(--c)) * 22deg)) scale(calc(0.88 + var(--c) * 0.12));
+  filter: blur(calc((1 - var(--c)) * 8px));
+}
+
 @keyframes rise { to { opacity: 1; transform: none; } }
-@keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(3deg); } }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 51, 71, 0.6); } 50% { box-shadow: 0 0 0 6px rgba(255, 51, 71, 0); } }
 @keyframes ticker { to { transform: translateX(-50%); } }
+@keyframes idle { to { --idle: 360deg; } }
 
+/* Reduced motion: autoplay motion stops (idle spin, ticker, pulse, entrance
+   fades). Scroll-linked effects still follow the visitor's own scrolling. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .js .hero-copy > *, .js .reveal { opacity: 1; transform: none; }
-  /* Autoplay motion stays off, but the scroll tilt still follows the user's own scrolling, in a gentler form. */
-  .hero-copy { filter: none; }
-  .hero-copy > * { translate: none; }
-  .hero-art { transform: rotateX(calc(var(--p) * 40deg)); }
-  .layer { transform: translate3d(0, 0, calc(var(--p) * var(--z, 0) * 0.5px)); filter: none; }
-  .js .reveal { filter: none; }
-  .js .step::after { transform: none; }
+  .js .hero-copy > *, .js .reveal { opacity: 1; transform: none; filter: none; }
+  .js .step::after { transform: scaleX(1); }
 }
 
 /* Responsive */
@@ -485,7 +672,7 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 
 @media (max-width: 800px) {
   .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 2.5rem; gap: 2rem; }
-  .hero-art { max-width: 280px; justify-self: start; order: -1; }
+  .hero-art { max-width: 300px; justify-self: center; order: -1; }
 
   .header-cta { display: none; }
   .nav {

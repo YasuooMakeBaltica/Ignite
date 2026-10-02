@@ -36,31 +36,48 @@
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Website studio</p>
-        <h1>The Ignition <span class="accent">Union</span></h1>
-        <p class="tagline">Sparking ideas into websites that work.</p>
-        <p class="lead">We design and build fast, accessible, professionally crafted websites for businesses that want a strong presence online.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="#contact">Start a project</a>
+    <div class="pin pin-hero" id="top">
+      <div class="pin-inner">
+        <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Website studio</p>
+          <h1>The Ignition <span class="accent">Union</span></h1>
+          <p class="tagline">Sparking ideas into websites that work.</p>
+          <p class="lead">We design and build fast, accessible, professionally crafted websites for businesses that want a strong presence online.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#contact">Start a project</a>
+          </div>
+          <ul class="pills" aria-label="What we focus on">
+            <li>Fast</li>
+            <li>Accessible</li>
+            <li>Responsive</li>
+          </ul>
         </div>
-        <ul class="pills" aria-label="What we focus on">
-          <li>Fast</li>
-          <li>Accessible</li>
-          <li>Responsive</li>
-        </ul>
-      </div>
 
-      <div class="hero-art" id="hero-art" aria-hidden="true">
-        <span class="glow"></span>
-        <span class="layer layer-1"><span class="shape shape-red"></span></span>
-        <span class="layer layer-2"><span class="shape shape-yellow"></span></span>
-        <span class="layer layer-3"><span class="shape shape-square"></span></span>
-        <span class="layer layer-4"><span class="shape shape-ring"></span></span>
-        <span class="layer layer-5"><span class="shape shape-dot"></span></span>
+          <div class="hero-art" id="hero-art" aria-hidden="true">
+            <span class="glow"></span>
+            <div class="scene">
+              <span class="core"></span>
+
+              <div class="orbit orbit-1">
+                <span class="ring"></span>
+                <div class="arm"><span class="body body-yellow"></span></div>
+              </div>
+              <div class="orbit orbit-2">
+                <span class="ring"></span>
+                <div class="arm"><span class="body body-ember"></span></div>
+              </div>
+              <div class="orbit orbit-3">
+                <span class="ring"></span>
+                <div class="arm"><span class="body body-dot"></span></div>
+              </div>
+
+              <div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
 
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
@@ -71,7 +88,9 @@
       </div>
     </div>
 
-    <section class="section" id="services">
+    <section class="pin pin-services section" data-nav="services">
+      <span class="pin-anchor" id="services"></span>
+      <div class="pin-inner"><div class="stage">
       <div class="section-head reveal">
         <p class="kicker">Services</p>
         <h2>Everything your site needs to perform.</h2>
@@ -100,9 +119,12 @@
           <p>Updates, fixes, and improvements after launch, so your site keeps pace with your business.</p>
         </article>
       </div>
+      </div></div>
     </section>
 
-    <section class="section section-alt" id="process">
+    <section class="pin pin-process section section-alt" data-nav="process">
+      <span class="pin-anchor" id="process"></span>
+      <div class="pin-inner"><div class="stage">
       <div class="section-head reveal">
         <p class="kicker">Process</p>
         <h2>A simple path from idea to launch.</h2>
@@ -110,29 +132,32 @@
 
       <ol class="steps">
         <li class="step reveal">
-          <span class="step-num">1</span>
+          <span class="step-num"><b>1</b></span>
           <h3>Discover</h3>
           <p>We learn your goals, audience, and what success looks like.</p>
         </li>
         <li class="step reveal">
-          <span class="step-num">2</span>
+          <span class="step-num"><b>2</b></span>
           <h3>Design</h3>
           <p>We shape the look and structure, and refine it with your feedback.</p>
         </li>
         <li class="step reveal">
-          <span class="step-num">3</span>
+          <span class="step-num"><b>3</b></span>
           <h3>Build</h3>
           <p>We turn the design into a fast, responsive, accessible site.</p>
         </li>
         <li class="step reveal">
-          <span class="step-num">4</span>
+          <span class="step-num"><b>4</b></span>
           <h3>Launch</h3>
           <p>We test, go live, and stay on hand for whatever comes next.</p>
         </li>
       </ol>
+      </div></div>
     </section>
 
-    <section class="section" id="contact">
+    <section class="pin pin-contact section" data-nav="contact">
+      <span class="pin-anchor" id="contact"></span>
+      <div class="pin-inner"><div class="stage">
       <div class="contact reveal">
         <div class="contact-copy">
           <p class="kicker">Contact</p>
@@ -148,6 +173,7 @@
           <p class="discord-note" id="discord-note" role="status" aria-live="polite"></p>
         </div>
       </div>
+      </div></div>
     </section>
   </main>
 
