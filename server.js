@@ -56,9 +56,10 @@ app.get("/discord", (req, res) => {
 app.use(
   express.static(PUBLIC_DIR, {
     extensions: ["html"],
-    maxAge: "1h",
+    // Always revalidate (ETag) so edits to HTML, CSS and JS show up right away.
     setHeaders(res, filePath) {
-      if (filePath.endsWith(".html")) res.setHeader("Cache-Control", "no-cache");
+      if (/\.(html|css|js)$/.test(filePath)) res.setHeader("Cache-Control", "no-cache");
+      else res.setHeader("Cache-Control", "public, max-age=3600");
     },
   })
 );
