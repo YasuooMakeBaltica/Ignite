@@ -228,7 +228,7 @@ h1 {
 .shape-dot { border-radius: 50%; background: var(--text); --dur: 5s; }
 
 /* Scroll-driven hero. --p eases from 0 to 1 as the hero scrolls out of view. */
-.hero { --p: 0; perspective: 1100px; }
+.hero { --p: 0; perspective: 900px; }
 
 .hero-copy { opacity: calc(1 - var(--p) * 1.3); filter: blur(calc(var(--p) * 4px)); will-change: opacity, filter; }
 .hero-copy > * { translate: 0 calc(var(--p) * var(--k, -40) * 1px); }
@@ -239,21 +239,23 @@ h1 {
 .hero-copy > :nth-child(5) { --k: -120; }
 .hero-copy > :nth-child(6) { --k: -145; }
 
+/* No opacity or filter on .hero-art itself: either one would flatten the 3D tilt. */
 .hero-art {
   transform-style: preserve-3d;
-  transform: translateY(calc(var(--p) * 30px)) rotateY(calc(var(--p) * -22deg)) rotateX(calc(var(--p) * 12deg)) scale(calc(1 - var(--p) * 0.2));
-  opacity: calc(1 - var(--p) * 0.92);
-  filter: blur(calc(var(--p) * 4px));
-  will-change: transform, opacity;
+  transform: translateY(calc(var(--p) * 20px)) rotateX(calc(var(--p) * 62deg)) rotateY(calc(var(--p) * -16deg)) scale(calc(1 - var(--p) * 0.12));
+  will-change: transform;
 }
 .layer {
   transform: translate3d(0, calc(var(--p) * var(--speed, 0) * 1px), calc(var(--p) * var(--z, 0) * 1px)) rotate(calc(var(--p) * var(--spin, 0) * 1deg));
+  opacity: calc(1 - var(--p) * 0.9);
+  filter: blur(calc(var(--p) * 3px));
 }
-.layer-1 { --speed: 80; --spin: 35; --z: -60; }
-.layer-2 { --speed: -70; --spin: -55; --z: 90; }
-.layer-3 { --speed: 150; --spin: 100; --z: 140; }
-.layer-4 { --speed: -120; --spin: 140; --z: 40; }
-.layer-5 { --speed: 210; --z: 200; }
+.glow { opacity: calc(1 - var(--p) * 0.9); }
+.layer-1 { --speed: 60; --spin: 25; --z: -120; }
+.layer-2 { --speed: -50; --spin: -40; --z: 120; }
+.layer-3 { --speed: 110; --spin: 70; --z: 220; }
+.layer-4 { --speed: -90; --spin: 100; --z: 60; }
+.layer-5 { --speed: 160; --z: 300; }
 
 .accent { background-size: 200% 100%; background-position: calc(var(--p) * 100%) 0; }
 
