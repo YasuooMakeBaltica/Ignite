@@ -1,26 +1,39 @@
-# Ignite
+# The Ignition Union
 
-A website built with HTML, CSS, and JavaScript.
+**Sparking ideas into websites that work.**
 
-## Description
+> *Ignite* is the project's codename. **The Ignition Union** is the brand.
 
-Ignite is a static website. This project is in its early stages; more details will be added as it is built.
+## About
 
-## Features
+The Ignition Union is a website-building business. We design and develop fast, accessible, professionally crafted websites for clients who want a strong presence online. This repository contains the source for The Ignition Union's own website, the home of our brand, our services, and our work.
 
-- Responsive layout
-- Clean, semantic HTML
-- Styled with plain CSS
-- Interactivity with vanilla JavaScript
+The site is built with HTML, CSS, and JavaScript, with no frameworks or build step, so it stays lightweight, quick to load, and easy to maintain.
+
+## What We Do
+
+- **Website design and development:** custom sites built around each client's goals
+- **Responsive layouts:** pages that look right on phones, tablets, and desktops
+- **Performance and accessibility:** semantic markup, optimized assets, and inclusive design
+- **Ongoing support:** updates and improvements after launch
+
+## Tech Stack
+
+| Layer      | Technology                |
+| ---------- | ------------------------- |
+| Structure  | HTML5                     |
+| Styling    | CSS3                      |
+| Behavior   | Vanilla JavaScript (ES6+) |
+| Hosting    | Any static host           |
 
 ## Getting Started
 
 ### Prerequisites
 
 - A modern web browser
-- (Optional) A local web server such as `python3 -m http.server` or the VS Code Live Server extension
+- Optional: a local web server, such as `python3 -m http.server` or the VS Code Live Server extension
 
-### Running locally
+### Run locally
 
 1. Clone the repository:
 
@@ -44,18 +57,26 @@ Ignite/
 ├── index.html      # Main page
 ├── css/            # Stylesheets
 ├── js/             # Scripts
-├── assets/         # Images, fonts, and other static files
+├── assets/         # Images, logos, fonts, and other static files
 ├── .gitignore
 └── README.md
 ```
+
+## Brand
+
+- **Name:** The Ignition Union
+- **Codename:** Ignite
+- **Tagline:** Sparking ideas into websites that work.
+
+Logo files, colors, and typography will be documented here once they are finalized.
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/my-feature`)
 3. Commit your changes
-4. Push to the branch and open a pull request
+4. Push to your branch and open a pull request
 
 ## License
 
-No license has been chosen yet. Add a `LICENSE` file to specify one.
+All rights reserved © The Ignition Union. A formal license has not been chosen yet.
