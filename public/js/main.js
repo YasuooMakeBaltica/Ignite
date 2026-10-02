@@ -30,8 +30,14 @@
     if (e.key === "Escape") setMenu(false);
   });
 
-  // Reveal on scroll
+  // Reveal on scroll, staggered by position within each group
   var revealEls = document.querySelectorAll(".reveal");
+  revealEls.forEach(function (el) {
+    var siblings = Array.prototype.filter.call(el.parentElement.children, function (n) {
+      return n.classList.contains("reveal");
+    });
+    el.style.setProperty("--i", siblings.indexOf(el));
+  });
   if ("IntersectionObserver" in window && !reduceMotion) {
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -82,32 +88,40 @@
     });
   }
 
-  // Scroll-driven hero and page progress bar
+  // Scroll-driven hero and page progress bar, eased for a smooth feel
   var hero = document.getElementById("top");
   var progress = document.getElementById("scroll-progress");
-  var ticking = false;
+  var heroTarget = 0;
+  var heroCurrent = 0;
+  var running = false;
 
   function clamp01(n) { return Math.min(1, Math.max(0, n)); }
 
-  function updateScroll() {
-    ticking = false;
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : 0);
-    if (!reduceMotion) {
-      hero.style.setProperty("--p", clamp01(window.scrollY / (hero.offsetHeight * 0.9)).toFixed(4));
+  function frame() {
+    var diff = heroTarget - heroCurrent;
+    heroCurrent = Math.abs(diff) < 0.0005 ? heroTarget : heroCurrent + diff * 0.14;
+    hero.style.setProperty("--p", heroCurrent.toFixed(4));
+    if (heroCurrent !== heroTarget) {
+      window.requestAnimationFrame(frame);
+    } else {
+      running = false;
     }
   }
 
-  function requestScrollUpdate() {
-    if (!ticking) {
-      ticking = true;
-      window.requestAnimationFrame(updateScroll);
+  function updateScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : 0);
+    if (reduceMotion) return;
+    heroTarget = clamp01(window.scrollY / (hero.offsetHeight * 0.9));
+    if (!running) {
+      running = true;
+      window.requestAnimationFrame(frame);
     }
   }
 
   updateScroll();
-  window.addEventListener("scroll", requestScrollUpdate, { passive: true });
-  window.addEventListener("resize", requestScrollUpdate);
+  window.addEventListener("scroll", updateScroll, { passive: true });
+  window.addEventListener("resize", updateScroll);
 
   // Discord link: the server redirects back here until an invite is configured
   var note = document.getElementById("discord-note");
