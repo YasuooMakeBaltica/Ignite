@@ -19,45 +19,67 @@ The site is built with HTML, CSS, and JavaScript, with no frameworks or build st
 
 ## Tech Stack
 
-| Layer      | Technology                |
-| ---------- | ------------------------- |
-| Structure  | HTML5                     |
-| Styling    | CSS3                      |
-| Behavior   | Vanilla JavaScript (ES6+) |
-| Hosting    | Any static host           |
+| Layer     | Technology                               |
+| --------- | ---------------------------------------- |
+| Frontend  | HTML5, CSS3, vanilla JavaScript (ES6+)   |
+| Backend   | Node.js with Express                     |
+| Security  | Helmet (security headers, CSP), compression |
+
+The frontend has no framework or build step. The Express server serves the site, adds security headers, and handles the `/discord` invite redirect.
 
 ## Getting Started
 
 ### Prerequisites
 
-- A modern web browser
-- Optional: a local web server, such as `python3 -m http.server` or the VS Code Live Server extension
+- [Node.js](https://nodejs.org/) 18 or newer
 
 ### Run locally
 
-1. Clone the repository:
+1. Clone the repository and install dependencies:
 
    ```bash
    git clone https://github.com/YasuooMakeBaltica/Ignite.git
    cd Ignite
+   npm install
    ```
 
-2. Open `index.html` in your browser, or serve the folder locally:
+2. Copy the example environment file:
 
    ```bash
-   python3 -m http.server 8000
+   cp .env.example .env
    ```
 
-   Then visit <http://localhost:8000>.
+3. Start the server:
+
+   ```bash
+   npm start
+   ```
+
+   Then visit <http://localhost:3000>. Use `npm run dev` to restart automatically when files change.
+
+### Configuration
+
+Settings live in `.env` (never committed):
+
+| Variable             | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `PORT`               | Port the server listens on. Defaults to `3000`.                             |
+| `DISCORD_INVITE_URL` | Your Discord invite link, for example `https://discord.gg/yourcode`.        |
+
+The "Join our Discord" button points to `/discord`. Once `DISCORD_INVITE_URL` is set, that route redirects visitors to your server. Until then, visitors see a "coming soon" note on the page. Only `discord.gg` and `discord.com/invite` links are accepted.
 
 ## Project Structure
 
 ```
 Ignite/
-├── index.html      # Main page
-├── css/            # Stylesheets
-├── js/             # Scripts
-├── assets/         # Images, logos, fonts, and other static files
+├── public/             # Everything served to the browser
+│   ├── index.html
+│   ├── css/
+│   ├── js/
+│   └── assets/         # Images, logos, fonts
+├── server.js           # Express server
+├── package.json
+├── .env.example        # Template for local configuration
 ├── .gitignore
 └── README.md
 ```

@@ -68,64 +68,52 @@
   var art = document.getElementById("hero-art");
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (art && finePointer && !reduceMotion) {
-    var hero = art.closest(".hero");
-    hero.addEventListener("mousemove", function (e) {
-      var r = hero.getBoundingClientRect();
+    var heroEl = art.closest(".hero");
+    heroEl.addEventListener("mousemove", function (e) {
+      var r = heroEl.getBoundingClientRect();
       var x = (e.clientX - r.left) / r.width - 0.5;
       var y = (e.clientY - r.top) / r.height - 0.5;
       art.style.setProperty("--mx", (x * 2).toFixed(3));
       art.style.setProperty("--my", (y * 2).toFixed(3));
     });
-    hero.addEventListener("mouseleave", function () {
+    heroEl.addEventListener("mouseleave", function () {
       art.style.setProperty("--mx", 0);
       art.style.setProperty("--my", 0);
     });
   }
 
-  // Contact form (demo only, nothing is sent yet)
-  var form = document.getElementById("contact-form");
-  var status = document.getElementById("form-status");
-  var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Scroll-driven hero and page progress bar
+  var hero = document.getElementById("top");
+  var progress = document.getElementById("scroll-progress");
+  var ticking = false;
 
-  function setError(input, message) {
-    var field = input.closest(".field");
-    field.classList.toggle("invalid", Boolean(message));
-    field.querySelector(".error").textContent = message || "";
-    input.setAttribute("aria-invalid", message ? "true" : "false");
+  function clamp01(n) { return Math.min(1, Math.max(0, n)); }
+
+  function updateScroll() {
+    ticking = false;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : 0);
+    if (!reduceMotion) {
+      hero.style.setProperty("--p", clamp01(window.scrollY / (hero.offsetHeight * 0.9)).toFixed(4));
+    }
   }
 
-  function validate(input) {
-    var value = input.value.trim();
-    if (!value) { setError(input, "This field is required."); return false; }
-    if (input.type === "email" && !emailPattern.test(value)) {
-      setError(input, "Please enter a valid email address.");
-      return false;
+  function requestScrollUpdate() {
+    if (!ticking) {
+      ticking = true;
+      window.requestAnimationFrame(updateScroll);
     }
-    setError(input, "");
-    return true;
   }
 
-  var inputs = Array.prototype.slice.call(form.querySelectorAll("input, textarea"));
-  inputs.forEach(function (input) {
-    input.addEventListener("blur", function () { validate(input); });
-    input.addEventListener("input", function () {
-      if (input.closest(".field").classList.contains("invalid")) validate(input);
-    });
-  });
+  updateScroll();
+  window.addEventListener("scroll", requestScrollUpdate, { passive: true });
+  window.addEventListener("resize", requestScrollUpdate);
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var results = inputs.map(validate);
-    var firstBad = inputs[results.indexOf(false)];
-    if (firstBad) {
-      firstBad.focus();
-      status.textContent = "";
-      return;
-    }
-    // TODO: connect to a form backend before launch.
-    status.textContent = "Thanks! This is a demo form, so nothing was sent yet.";
-    form.reset();
-  });
+  // Discord link: the server redirects back here until an invite is configured
+  var note = document.getElementById("discord-note");
+  if (note && new URLSearchParams(window.location.search).get("discord") === "soon") {
+    note.textContent = "Our Discord server is coming soon. Check back shortly!";
+  }
 
   // Footer year
   var year = document.getElementById("year");

@@ -14,6 +14,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
   <header class="site-header" id="site-header">
     <a class="brand" href="#top" aria-label="The Ignition Union, home">
@@ -24,7 +25,6 @@
     <nav class="nav" id="nav" aria-label="Main">
       <a href="#services">Services</a>
       <a href="#process">Process</a>
-      <a href="#work">Work</a>
       <a href="#contact">Contact</a>
     </nav>
 
@@ -44,7 +44,6 @@
         <p class="lead">We design and build fast, accessible, professionally crafted websites for businesses that want a strong presence online.</p>
         <div class="actions">
           <a class="btn btn-primary" href="#contact">Start a project</a>
-          <a class="btn btn-outline" href="#work">See our work</a>
         </div>
         <ul class="pills" aria-label="What we focus on">
           <li>Fast</li>
@@ -133,56 +132,21 @@
       </ol>
     </section>
 
-    <section class="section" id="work">
-      <div class="section-head reveal">
-        <p class="kicker">Work</p>
-        <h2>Projects we are proud of.</h2>
-        <p class="section-lead">Placeholder projects for now. Real client work will be added here.</p>
-      </div>
-
-      <div class="work-grid">
-        <a class="work-card reveal" href="#contact">
-          <span class="work-cover cover-a" aria-hidden="true"></span>
-          <span class="work-meta"><strong>Project name</strong><small>Business website</small></span>
-        </a>
-        <a class="work-card reveal" href="#contact">
-          <span class="work-cover cover-b" aria-hidden="true"></span>
-          <span class="work-meta"><strong>Project name</strong><small>Online store</small></span>
-        </a>
-        <a class="work-card reveal" href="#contact">
-          <span class="work-cover cover-c" aria-hidden="true"></span>
-          <span class="work-meta"><strong>Project name</strong><small>Portfolio</small></span>
-        </a>
-      </div>
-    </section>
-
     <section class="section" id="contact">
       <div class="contact reveal">
         <div class="contact-copy">
           <p class="kicker">Contact</p>
           <h2>Ready to ignite your idea?</h2>
-          <p class="section-lead">Tell us a little about your project and we will get back to you.</p>
+          <p class="section-lead">Join our Discord server to talk with the team, ask questions, and start your project.</p>
         </div>
 
-        <form class="form" id="contact-form" novalidate>
-          <div class="field">
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required>
-            <span class="error" data-for="name"></span>
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-            <span class="error" data-for="email"></span>
-          </div>
-          <div class="field">
-            <label for="message">Project details</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
-            <span class="error" data-for="message"></span>
-          </div>
-          <button class="btn btn-primary" type="submit">Send message</button>
-          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-        </form>
+        <div class="discord-panel">
+          <a class="btn btn-discord" id="discord-link" href="/discord">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3a14.7 14.7 0 0 0-.68 1.396 18.27 18.27 0 0 0-5.487 0A14.5 14.5 0 0 0 9.036 3a19.74 19.74 0 0 0-4.433 1.37C1.8 8.6.96 12.72 1.38 16.78a19.9 19.9 0 0 0 5.993 3.03 14.6 14.6 0 0 0 1.283-2.085 12.9 12.9 0 0 1-2.02-.97c.17-.124.335-.253.495-.385a14.2 14.2 0 0 0 12.14 0c.16.132.325.261.495.385-.646.385-1.32.71-2.02.97.37.73.8 1.43 1.283 2.085a19.86 19.86 0 0 0 5.993-3.03c.49-4.7-.836-8.78-3.682-12.411ZM8.68 14.31c-1.18 0-2.15-1.08-2.15-2.4 0-1.32.95-2.4 2.15-2.4 1.21 0 2.17 1.09 2.15 2.4 0 1.32-.95 2.4-2.15 2.4Zm6.64 0c-1.18 0-2.15-1.08-2.15-2.4 0-1.32.95-2.4 2.15-2.4 1.21 0 2.17 1.09 2.15 2.4 0 1.32-.94 2.4-2.15 2.4Z"/></svg>
+            <span>Join our Discord</span>
+          </a>
+          <p class="discord-note" id="discord-note" role="status" aria-live="polite"></p>
+        </div>
       </div>
     </section>
   </main>
