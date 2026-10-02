@@ -510,35 +510,43 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
 .js .hero-copy > *:nth-child(6) { animation-delay: 0.4s; }
 
 /* ------------------------------------------------------------------
-   Scroll-linked entrances
-   JS sets --c on every [data-fx] item from its own position on screen:
-   0 while it is below the fold, 1 once it has fully arrived. It only
-   moves while you scroll, so the page needs no extra scroll space.
+   Timed entrances
+   Scrolling only triggers these: main.js adds .in when an item enters the
+   screen and removes it once the item is fully off screen, so each one
+   replays on re-entry. They run for a fixed time on the compositor, so they
+   look the same however fast or slow you scroll.
 ------------------------------------------------------------------- */
-[data-fx] { --c: 1; }
-
-.js .section-head[data-fx] {
-  opacity: var(--c);
-  transform: translateY(calc((1 - var(--c)) * 60px));
-}
-
 .cards, .steps { perspective: 1000px; }
 
-.js .card[data-fx], .js .step[data-fx] {
-  opacity: var(--c);
-  transform: translateY(calc((1 - var(--c)) * 90px)) rotateX(calc((1 - var(--c)) * 28deg)) scale(calc(0.9 + var(--c) * 0.1));
-  transition: border-color 0.25s ease, background-color 0.25s ease;
-  will-change: transform, opacity;
-}
-.js .card[data-fx]:hover { transform: translateY(-6px); }
+.js [data-fx] { --fx-from: translateY(60px); }
+.js .card[data-fx], .js .step[data-fx] { --fx-from: translateY(80px) rotateX(24deg) scale(0.92); }
+.js .contact[data-fx] { --fx-from: perspective(1200px) translateY(80px) rotateX(18deg) scale(0.92); }
 
-.js .step-num { background: conic-gradient(var(--red) calc(var(--c) * 360deg), var(--border) 0); }
-.js .step[data-fx]::after { transform: scaleX(var(--c)); transform-origin: left; background: var(--red); }
-
-.js .contact[data-fx] {
-  opacity: var(--c);
-  transform: perspective(1200px) translateY(calc((1 - var(--c)) * 90px)) rotateX(calc((1 - var(--c)) * 22deg)) scale(calc(0.88 + var(--c) * 0.12));
+.js [data-fx]:not(.in) { opacity: 0; transform: var(--fx-from); }
+.js [data-fx].in {
+  animation: fx-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
 }
+.js .card[data-fx] { transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease; }
+.js .card[data-fx].in:hover { transform: translateY(-6px); }
+
+/* Process steps: the ring fills and the connector line draws in */
+.js .step[data-fx]:not(.in)::after { transform: scaleX(0); }
+.js .step[data-fx].in::after {
+  background: var(--red);
+  transform-origin: left;
+  animation: draw-line 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 400ms);
+}
+.js .step[data-fx].in .step-num {
+  background: var(--red);
+  animation: ring-fill 0.5s ease backwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 250ms);
+}
+
+@keyframes fx-in { from { opacity: 0; transform: var(--fx-from); } }
+@keyframes draw-line { from { transform: scaleX(0); } }
+@keyframes ring-fill { from { background: var(--border); } }
 
 @keyframes rise { to { opacity: 1; transform: none; } }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 51, 71, 0.6); } 50% { box-shadow: 0 0 0 6px rgba(255, 51, 71, 0); } }
