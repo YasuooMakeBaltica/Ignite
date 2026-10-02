@@ -66,7 +66,7 @@ Settings live in `.env` (never committed):
 | `PORT`               | Port the server listens on. Defaults to `3000`.                             |
 | `DISCORD_INVITE_URL` | Optional. Overrides the default invite used by the `/discord` route.        |
 
-The "Join our Discord" button links straight to the invite (`https://discord.gg/5MKENrrxBB`), so it works on any host, including static ones. If the invite changes, update the link in `public/index.html` and the default in `server.js`. The `/discord` route is a short link that redirects to the same invite.
+The "Join our Discord" button links straight to the invite (`https://discord.gg/sxtfMfxtHq`), so it works on any host, including static ones. If the invite changes, update the link in `public/index.html` and the default in `server.js`. The `/discord` route is a short link that redirects to the same invite.
 
 ## Project Structure
 

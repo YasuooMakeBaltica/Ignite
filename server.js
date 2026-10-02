@@ -11,7 +11,7 @@ const PUBLIC_DIR = path.join(__dirname, "public");
 // Only allow real Discord invite links, so a typo or bad value can never
 // turn /discord into an open redirect.
 const DISCORD_INVITE_PATTERN = /^https:\/\/(discord\.gg|discord\.com\/invite)\/[A-Za-z0-9-]+$/;
-const DEFAULT_INVITE = "https://discord.gg/5MKENrrxBB";
+const DEFAULT_INVITE = "https://discord.gg/sxtfMfxtHq";
 const rawInvite = (process.env.DISCORD_INVITE_URL || "").trim();
 const discordInvite = DISCORD_INVITE_PATTERN.test(rawInvite) ? rawInvite : DEFAULT_INVITE;
 
