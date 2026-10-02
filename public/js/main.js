@@ -148,9 +148,14 @@
   function renderHero(now, intro) {
     var e = easeOutQuart(intro);
     var rest = 1 - e;
-    var idle = reduceMotion ? 0 : ((now / 60000) * 360) % 360;
-    var rx = lerp(16 + 36 * INTRO_SCALE, 16, e) - pointer.y * 7;
-    var ry = lerp(-24 - 186 * INTRO_SCALE, -24, e) + pointer.x * 9;
+    // The idle spin always runs, even with reduced motion on: the planets orbit
+    // and the cube turns forever, and the camera sways slowly so the scene
+    // never looks frozen.
+    var idle = ((now / 40000) * 360) % 360;
+    var swayY = Math.sin(now / 3800) * 14;
+    var swayX = Math.sin(now / 5200) * 5;
+    var rx = lerp(16 + 36 * INTRO_SCALE, 16, e) - pointer.y * 7 + swayX * e;
+    var ry = lerp(-24 - 186 * INTRO_SCALE, -24, e) + pointer.x * 9 + swayY * e;
     var fade = clamp01(intro * 2.2);
 
     scene.style.transform = "rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) scale(" + lerp(lerp(1, 0.5, INTRO_SCALE), 1, e).toFixed(3) + ")";
@@ -194,10 +199,10 @@
       moving = true;
     }
 
-    // Only render while the hero is on screen; keep looping for the idle spin
+    // Only render while the hero is on screen; keep looping for the endless spin
     if (heroVisible) renderHero(now, intro);
 
-    if (moving || (heroVisible && !reduceMotion)) {
+    if (moving || heroVisible) {
       window.requestAnimationFrame(frame);
     } else {
       running = false;
