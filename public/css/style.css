@@ -467,8 +467,11 @@ h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .hero-copy > *, .js .reveal { opacity: 1; transform: none; }
-  .hero-copy, .hero-art, .layer { transform: none; opacity: 1; filter: none; }
+  /* Autoplay motion stays off, but the scroll tilt still follows the user's own scrolling, in a gentler form. */
+  .hero-copy { filter: none; }
   .hero-copy > * { translate: none; }
+  .hero-art { transform: rotateX(calc(var(--p) * 40deg)); }
+  .layer { transform: translate3d(0, 0, calc(var(--p) * var(--z, 0) * 0.5px)); filter: none; }
   .js .reveal { filter: none; }
   .js .step::after { transform: none; }
 }

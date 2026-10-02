@@ -111,8 +111,13 @@
   function updateScroll() {
     var max = document.documentElement.scrollHeight - window.innerHeight;
     progress.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : 0);
-    if (reduceMotion) return;
     heroTarget = clamp01(window.scrollY / (hero.offsetHeight * 0.9));
+    if (reduceMotion) {
+      // No easing for reduced motion: follow the scroll position directly.
+      heroCurrent = heroTarget;
+      hero.style.setProperty("--p", heroCurrent.toFixed(4));
+      return;
+    }
     if (!running) {
       running = true;
       window.requestAnimationFrame(frame);
