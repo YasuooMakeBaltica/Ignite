@@ -1,6 +1,6 @@
 (function () {
   var root = document.documentElement;
-  root.classList.add("js");
+  root.classList.add("js", "loading");
 
   // Reduced motion softens the animations rather than removing them. Adding
   // ?motion=full to the URL ignores the system setting, which helps with testing.
@@ -139,6 +139,7 @@
 
   var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   var startTime = null;
+  var introArmed = false; // the intro starts once the loading skeleton is gone
   var heroVisible = true;
   var running = false;
   var lastTime = 0;
@@ -185,13 +186,13 @@
   }
 
   function frame(now) {
-    if (startTime === null) startTime = now;
+    if (introArmed && startTime === null) startTime = now;
     var dt = lastTime ? Math.min(64, now - lastTime) : 16;
     lastTime = now;
 
-    var intro = clamp01((now - startTime) / INTRO_MS);
+    var intro = startTime === null ? 0 : clamp01((now - startTime) / INTRO_MS);
     var kPointer = 1 - Math.exp(-dt / 160);
-    var moving = intro < 1;
+    var moving = introArmed ? intro < 1 : false;
 
     if (pointer.x !== pointer.tx || pointer.y !== pointer.ty) {
       pointer.x = ease(pointer.x, pointer.tx, kPointer);
@@ -253,6 +254,65 @@
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(measure);
   }
+
+
+  // ------------------------------------------------------------------
+  // Loading skeleton
+  //
+  // The skeleton in index.html covers the page until the fonts and the page
+  // itself are ready, then fades out, and only then do the hero intro and the
+  // entrance animations start. Fonts are attached from here instead of a
+  // blocking <link>, so a slow font request can never delay the first paint.
+  // ------------------------------------------------------------------
+  var skeleton = document.getElementById("skeleton");
+  var loadingDone = false;
+
+  function finishLoading() {
+    if (loadingDone) return;
+    loadingDone = true;
+    // Two frames so the first real paint is on screen before the skeleton fades
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        root.classList.remove("loading");
+        introArmed = true;
+        kick();
+        if (skeleton) {
+          skeleton.classList.add("hide");
+          window.setTimeout(function () { skeleton.remove(); }, 700);
+        }
+      });
+    });
+  }
+
+  function whenFontsReady(done) {
+    var fontsUrl = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap";
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = fontsUrl;
+    var settled = false;
+    function settle() {
+      if (settled) return;
+      settled = true;
+      // The stylesheet is in; wait for the font files it asked for (or give up)
+      var fontsPromise = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      fontsPromise.then(done, done);
+    }
+    link.onload = settle;
+    link.onerror = settle;
+    document.head.appendChild(link);
+    window.setTimeout(settle, 3500); // slow or blocked fonts never hold the page up
+  }
+
+  var pageLoaded = document.readyState === "complete";
+  var fontsDone = false;
+  function checkReady() {
+    if (pageLoaded && fontsDone) finishLoading();
+  }
+  whenFontsReady(function () { fontsDone = true; checkReady(); });
+  if (!pageLoaded) {
+    window.addEventListener("load", function () { pageLoaded = true; checkReady(); });
+  }
+  window.setTimeout(finishLoading, 6000); // hard limit
 
   // Discord link: the server redirects back here until an invite is configured
   var note = document.getElementById("discord-note");

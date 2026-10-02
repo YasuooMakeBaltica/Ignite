@@ -9,10 +9,38 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2713%27 cy=%2716%27 r=%2711%27 fill=%27%23f2a900%27/%3E%3Ccircle cx=%2721%27 cy=%2716%27 r=%2711%27 fill=%27%23ff3347%27 fill-opacity=%27.9%27/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="skeleton" id="skeleton" aria-hidden="true">
+    <div class="sk-header">
+      <span class="sk sk-dot"></span>
+      <span class="sk sk-logo"></span>
+      <span class="sk-nav"><span class="sk sk-link"></span><span class="sk sk-link"></span><span class="sk sk-link"></span></span>
+      <span class="sk sk-btn-small"></span>
+    </div>
+    <div class="sk-hero">
+      <div class="sk-copy">
+        <span class="sk sk-pill"></span>
+        <span class="sk sk-title"></span>
+        <span class="sk sk-title sk-title-2"></span>
+        <span class="sk sk-line sk-tagline"></span>
+        <span class="sk sk-line sk-para"></span>
+        <span class="sk sk-line sk-para sk-para-2"></span>
+        <span class="sk sk-btn"></span>
+        <span class="sk-pills"><span class="sk sk-chip"></span><span class="sk sk-chip"></span><span class="sk sk-chip"></span></span>
+      </div>
+      <div class="sk-art">
+        <span class="sk-ring"></span>
+        <span class="sk sk-core"></span>
+        <span class="sk sk-planet"></span>
+        <span class="sk sk-planet sk-planet-2"></span>
+      </div>
+    </div>
+  </div>
+
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 

@@ -311,6 +311,100 @@ h1 {
 .cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--cs) / 2)); }
 .cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--cs) / 2)); }
 
+
+/* ------------------------------------------------------------------
+   Loading skeleton
+   A grey outline of the hero shows while fonts and scripts load, which
+   matters most on slow phones and computers. main.js fades it out once the
+   page is ready. If scripts never run, the failsafe animation removes it
+   after a few seconds, so it can never trap a visitor.
+------------------------------------------------------------------- */
+.skeleton {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg);
+  overflow: hidden;
+  animation: sk-failsafe 0.4s ease 9s forwards;
+}
+.skeleton.hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+}
+/* One soft highlight sweeps across everything: a single cheap layer */
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(246, 243, 236, 0.055) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: sk-shimmer 1.7s ease-in-out infinite;
+  pointer-events: none;
+}
+.js.loading { overflow: hidden; }
+
+.sk { display: block; background: #19191d; border-radius: 8px; }
+.sk-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: var(--header-h);
+  padding: 0 var(--gutter);
+  border-bottom: 1px solid var(--border);
+}
+.sk-dot { width: 26px; height: 20px; border-radius: 999px; }
+.sk-logo { width: 150px; height: 14px; }
+.sk-nav { display: flex; gap: 2rem; margin-left: auto; }
+.sk-link { width: 56px; height: 12px; }
+.sk-btn-small { width: 132px; height: 40px; border-radius: var(--radius); }
+
+.sk-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  min-height: calc(100vh - var(--header-h));
+  padding: 3rem var(--gutter);
+}
+.sk-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+.sk-pill { width: 160px; height: 34px; border-radius: 999px; }
+.sk-title { width: min(520px, 90%); height: clamp(48px, 6vw, 76px); border-radius: 12px; margin-top: 0.5rem; }
+.sk-title-2 { width: min(260px, 48%); margin-top: 0; }
+.sk-line { height: 14px; }
+.sk-tagline { width: min(430px, 80%); height: 22px; margin-top: 0.75rem; }
+.sk-para { width: min(500px, 90%); }
+.sk-para-2 { width: min(380px, 70%); }
+.sk-btn { width: 178px; height: 54px; border-radius: var(--radius); margin-top: 0.75rem; }
+.sk-pills { display: flex; gap: 0.6rem; margin-top: 1rem; }
+.sk-chip { width: 74px; height: 32px; border-radius: 999px; }
+
+.sk-art { position: relative; width: 100%; max-width: 480px; aspect-ratio: 1; justify-self: end; }
+.sk-core { position: absolute; top: 50%; left: 50%; width: 34%; height: 34%; margin: -17% 0 0 -17%; border-radius: 50%; }
+.sk-ring { position: absolute; inset: 8%; border: 1px solid #222228; border-radius: 50%; transform: rotate(-24deg) scaleY(0.62); }
+.sk-planet { position: absolute; top: 24%; right: 12%; width: 15%; aspect-ratio: 1; border-radius: 50%; }
+.sk-planet-2 { top: auto; right: auto; bottom: 22%; left: 20%; width: 8%; }
+
+@keyframes sk-shimmer { to { transform: translateX(100%); } }
+@keyframes sk-failsafe { to { opacity: 0; visibility: hidden; } }
+
+/* The hero text and entrances wait behind the skeleton, then play once it is gone */
+.js.loading .hero-copy > *,
+.js.loading [data-fx].in { animation-play-state: paused; }
+
+@media (max-width: 800px) {
+  .sk-nav, .sk-btn-small { display: none; }
+  .sk-hero { grid-template-columns: 1fr; min-height: auto; padding-top: 2.5rem; gap: 2rem; }
+  .sk-art { max-width: 300px; justify-self: center; order: -1; }
+  .sk-header { justify-content: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
+}
+
 /* Ticker */
 .ticker {
   overflow: hidden;
