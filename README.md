@@ -64,9 +64,9 @@ Settings live in `.env` (never committed):
 | Variable             | Description                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
 | `PORT`               | Port the server listens on. Defaults to `3000`.                             |
-| `DISCORD_INVITE_URL` | Your Discord invite link, for example `https://discord.gg/yourcode`.        |
+| `DISCORD_INVITE_URL` | Optional. Overrides the default invite used by the `/discord` route.        |
 
-The "Join our Discord" button points to `/discord`. Once `DISCORD_INVITE_URL` is set, that route redirects visitors to your server. Until then, visitors see a "coming soon" note on the page. Only `discord.gg` and `discord.com/invite` links are accepted.
+The "Join our Discord" button links straight to the invite (`https://discord.gg/5MKENrrxBB`), so it works on any host, including static ones. If the invite changes, update the link in `public/index.html` and the default in `server.js`. The `/discord` route is a short link that redirects to the same invite.
 
 ## Project Structure
 

@@ -314,12 +314,6 @@
   }
   window.setTimeout(finishLoading, 6000); // hard limit
 
-  // Discord link: the server redirects back here until an invite is configured
-  var note = document.getElementById("discord-note");
-  if (note && new URLSearchParams(window.location.search).get("discord") === "soon") {
-    note.textContent = "Our Discord server is coming soon. Check back shortly!";
-  }
-
   // Footer year
   var year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();

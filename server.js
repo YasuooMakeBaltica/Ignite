@@ -11,8 +11,9 @@ const PUBLIC_DIR = path.join(__dirname, "public");
 // Only allow real Discord invite links, so a typo or bad value can never
 // turn /discord into an open redirect.
 const DISCORD_INVITE_PATTERN = /^https:\/\/(discord\.gg|discord\.com\/invite)\/[A-Za-z0-9-]+$/;
+const DEFAULT_INVITE = "https://discord.gg/5MKENrrxBB";
 const rawInvite = (process.env.DISCORD_INVITE_URL || "").trim();
-const discordInvite = DISCORD_INVITE_PATTERN.test(rawInvite) ? rawInvite : null;
+const discordInvite = DISCORD_INVITE_PATTERN.test(rawInvite) ? rawInvite : DEFAULT_INVITE;
 
 if (rawInvite && !discordInvite) {
   console.warn("DISCORD_INVITE_URL is not a valid Discord invite link and will be ignored.");
@@ -45,12 +46,12 @@ app.get("/healthz", (req, res) => {
   res.json({ status: "ok" });
 });
 
-// Redirects to the Discord server. Until DISCORD_INVITE_URL is set, send
-// visitors back to the contact section with a flag the page can react to.
+// Redirects to the Discord server. The button on the page links straight to
+// the invite, so this route is a stable short link that also keeps working
+// if the invite ever changes (set DISCORD_INVITE_URL to override the default).
 app.get("/discord", (req, res) => {
   res.set("Cache-Control", "no-store");
-  if (discordInvite) return res.redirect(302, discordInvite);
-  res.redirect(302, "/?discord=soon#contact");
+  res.redirect(302, discordInvite);
 });
 
 app.use(
@@ -75,5 +76,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`The Ignition Union is running at http://localhost:${PORT}`);
-  console.log(discordInvite ? "Discord invite: configured" : "Discord invite: not set yet (set DISCORD_INVITE_URL)");
+  console.log("Discord invite: " + discordInvite);
 });
