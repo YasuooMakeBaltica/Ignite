@@ -6,11 +6,11 @@
   <title>Dream Auto Fix | Vulcanizare și service auto în Sectorul 6 (exemplu de design)</title>
   <meta name="description" content="Exemplu de design pentru Dream Auto Fix, Bd. Iuliu Maniu 564, Sector 6, București: vulcanizare și service auto.">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#121417">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2715%27 fill=%27%23121417%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%279%27 fill=%27none%27 stroke=%27%23ff7a1a%27 stroke-width=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%273%27 fill=%27%23ff7a1a%27/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#07080a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2715%27 fill=%27%2307080a%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%279%27 fill=%27none%27 stroke=%27%23ff6a2b%27 stroke-width=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%273%27 fill=%27%23ff6a2b%27/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,14 +21,14 @@
   <header class="site-header">
     <a class="logo" href="#top" aria-label="Dream Auto Fix, început de pagină">
       <svg class="logo-wheel" viewBox="0 0 40 40" aria-hidden="true">
-        <circle cx="20" cy="20" r="18" class="lw-tire"/>
-        <circle cx="20" cy="20" r="10" class="lw-rim"/>
-        <circle cx="20" cy="20" r="3.5" class="lw-hub"/>
+        <circle cx="20" cy="20" r="17" class="lw-ring"/>
+        <circle cx="20" cy="20" r="6" class="lw-hub"/>
       </svg>
       <span class="logo-text">Dream Auto <b>Fix</b></span>
     </a>
     <nav class="nav" aria-label="Principal">
       <a href="#servicii">Servicii</a>
+      <a href="#cum">Cum funcționează</a>
       <a href="#program">Program</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -38,9 +38,9 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Sector 6, București</p>
-        <h1>Vulcanizare și service auto.</h1>
-        <p class="lead">Aveți nevoie de ajutor cu mașina? Sunați sau scrieți-ne pe WhatsApp și stabilim împreună când treceți pe la noi.</p>
+        <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Sector 6, București</p>
+        <h1>Vulcanizare și service auto. <span class="accent">Gata de drum.</span></h1>
+        <p class="lead">Sunați sau scrieți-ne pe WhatsApp și stabilim împreună când treceți pe la noi.</p>
         <div class="actions">
           <a class="btn btn-primary" href="tel:+40727034384">Sună acum</a>
           <a class="btn btn-whatsapp" href="https://wa.me/40727034384?text=Bun%C4%83%20ziua!%20A%C8%99%20dori%20o%20programare." target="_blank" rel="noopener noreferrer">Scrie pe WhatsApp</a>
@@ -48,21 +48,41 @@
         <p class="status" id="open-status" role="status"></p>
       </div>
 
-      <div class="hero-art" aria-hidden="true">
-        <svg class="wheel" viewBox="0 0 200 200">
-          <circle cx="100" cy="100" r="94" class="w-tire"/>
-          <circle cx="100" cy="100" r="88" class="w-tread"/>
-          <circle cx="100" cy="100" r="66" class="w-rim"/>
-          <g class="w-spokes">
-            <path d="M100 100 L92 40 Q100 34 108 40 Z"/>
-            <path d="M100 100 L92 40 Q100 34 108 40 Z" transform="rotate(72 100 100)"/>
-            <path d="M100 100 L92 40 Q100 34 108 40 Z" transform="rotate(144 100 100)"/>
-            <path d="M100 100 L92 40 Q100 34 108 40 Z" transform="rotate(216 100 100)"/>
-            <path d="M100 100 L92 40 Q100 34 108 40 Z" transform="rotate(288 100 100)"/>
-          </g>
-          <circle cx="100" cy="100" r="16" class="w-hub"/>
-          <circle cx="100" cy="100" r="6" class="w-nut"/>
-        </svg>
+      <div class="wheel-wrap" aria-hidden="true">
+        <span class="wheel-glow"></span>
+        <span class="ground-shadow"></span>
+        <div class="wheel-scene" id="wheel-scene">
+          <div class="spin spin-back" id="spin-back">
+            <span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span><span class="tire-layer"></span>
+            <svg class="face face-back" viewBox="0 0 400 400">
+              <defs>
+                <linearGradient id="sidewall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1f25"/><stop offset="1" stop-color="#0d0f12"/></linearGradient>
+                <path id="sw-path" d="M200 200 m-176 0 a176 176 0 1 1 352 0 a176 176 0 1 1 -352 0"/>
+              </defs>
+              <circle cx="200" cy="200" r="200" fill="url(#sidewall)"/>
+              <circle cx="200" cy="200" r="150" class="sw-edge"/>
+              <text class="sw-text"><textPath href="#sw-path">DREAM AUTO FIX  ·  VULCANIZARE  ·  SERVICE AUTO  ·  SECTOR 6  ·  </textPath></text>
+              <circle cx="200" cy="200" r="124" class="bd-disc"/>
+              <circle cx="298.0" cy="200.0" r="3.2" class="bd-hole"/><circle cx="294.7" cy="225.4" r="3.2" class="bd-hole"/><circle cx="284.9" cy="249.0" r="3.2" class="bd-hole"/><circle cx="269.3" cy="269.3" r="3.2" class="bd-hole"/><circle cx="249.0" cy="284.9" r="3.2" class="bd-hole"/><circle cx="225.4" cy="294.7" r="3.2" class="bd-hole"/><circle cx="200.0" cy="298.0" r="3.2" class="bd-hole"/><circle cx="174.6" cy="294.7" r="3.2" class="bd-hole"/><circle cx="151.0" cy="284.9" r="3.2" class="bd-hole"/><circle cx="130.7" cy="269.3" r="3.2" class="bd-hole"/><circle cx="115.1" cy="249.0" r="3.2" class="bd-hole"/><circle cx="105.3" cy="225.4" r="3.2" class="bd-hole"/><circle cx="102.0" cy="200.0" r="3.2" class="bd-hole"/><circle cx="105.3" cy="174.6" r="3.2" class="bd-hole"/><circle cx="115.1" cy="151.0" r="3.2" class="bd-hole"/><circle cx="130.7" cy="130.7" r="3.2" class="bd-hole"/><circle cx="151.0" cy="115.1" r="3.2" class="bd-hole"/><circle cx="174.6" cy="105.3" r="3.2" class="bd-hole"/><circle cx="200.0" cy="102.0" r="3.2" class="bd-hole"/><circle cx="225.4" cy="105.3" r="3.2" class="bd-hole"/><circle cx="249.0" cy="115.1" r="3.2" class="bd-hole"/><circle cx="269.3" cy="130.7" r="3.2" class="bd-hole"/><circle cx="284.9" cy="151.0" r="3.2" class="bd-hole"/><circle cx="294.7" cy="174.6" r="3.2" class="bd-hole"/>
+              <circle cx="200" cy="200" r="62" class="bd-hat"/>
+            </svg>
+          </div>
+          <span class="caliper"></span>
+          <div class="spin spin-front" id="spin-front">
+            <svg class="face face-front" id="face-front" viewBox="0 0 400 400">
+              <defs>
+                <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f9"/><stop offset="0.5" stop-color="#aab2bc"/><stop offset="1" stop-color="#6d7681"/></linearGradient>
+                <linearGradient id="ember" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a52"/><stop offset="1" stop-color="#ff4d1a"/></linearGradient>
+              </defs>
+              <circle cx="200" cy="200" r="146" class="rim-lip"/>
+              <g class="spokes" fill="url(#silver)"><g transform="rotate(0 200 200)"><path d="M188 160 L178 76 Q200 62 222 76 L212 160 Z"/></g><g transform="rotate(72 200 200)"><path d="M188 160 L178 76 Q200 62 222 76 L212 160 Z"/></g><g transform="rotate(144 200 200)"><path d="M188 160 L178 76 Q200 62 222 76 L212 160 Z"/></g><g transform="rotate(216 200 200)"><path d="M188 160 L178 76 Q200 62 222 76 L212 160 Z"/></g><g transform="rotate(288 200 200)"><path d="M188 160 L178 76 Q200 62 222 76 L212 160 Z"/></g></g>
+              <circle cx="200" cy="200" r="46" fill="url(#silver)" class="hub"/>
+              <circle cx="200" cy="200" r="22" fill="url(#ember)"/>
+              <circle cx="200.0" cy="170.0" r="4.5" class="lug"/><circle cx="228.5" cy="190.7" r="4.5" class="lug"/><circle cx="217.6" cy="224.3" r="4.5" class="lug"/><circle cx="182.4" cy="224.3" r="4.5" class="lug"/><circle cx="171.5" cy="190.7" r="4.5" class="lug"/>
+            </svg>
+          </div>
+          <span class="sheen"></span>
+        </div>
       </div>
     </section>
 
@@ -74,17 +94,17 @@
       </div>
 
       <ul class="services">
-        <li class="service">
+        <li class="service" data-fx>
           <span class="service-tag">01</span>
           <h3>Vulcanizare</h3>
           <p>Servicii pentru anvelope și roți.</p>
         </li>
-        <li class="service">
+        <li class="service" data-fx>
           <span class="service-tag">02</span>
           <h3>Service auto</h3>
           <p>Reparații și întreținere pentru mașina dumneavoastră.</p>
         </li>
-        <li class="service service-cta">
+        <li class="service service-cta" data-fx>
           <span class="service-tag">03</span>
           <h3>Programare simplă</h3>
           <p>Sunați sau scrieți-ne pe WhatsApp. Răspundem cât putem de repede.</p>
@@ -93,7 +113,45 @@
       </ul>
     </section>
 
-    <section class="section section-dark" id="program">
+    <section class="section" id="cum">
+      <div class="section-head">
+        <p class="kicker">Cum funcționează</p>
+        <h2>Patru pași până la drum.</h2>
+      </div>
+
+      <ol class="timeline">
+        <li class="t-step" data-fx>
+          <span class="t-dot" aria-hidden="true">1</span>
+          <div>
+            <h3>Sunați sau scrieți</h3>
+            <p>Apelați sau trimiteți un mesaj pe WhatsApp la 0727 034 384.</p>
+          </div>
+        </li>
+        <li class="t-step" data-fx>
+          <span class="t-dot" aria-hidden="true">2</span>
+          <div>
+            <h3>Stabilim ora</h3>
+            <p>Împreună alegem ziua și ora care vi se potrivesc.</p>
+          </div>
+        </li>
+        <li class="t-step" data-fx>
+          <span class="t-dot" aria-hidden="true">3</span>
+          <div>
+            <h3>Aduceți mașina</h3>
+            <p>Treceți pe la noi, la Bd. Iuliu Maniu nr. 564.</p>
+          </div>
+        </li>
+        <li class="t-step" data-fx>
+          <span class="t-dot" aria-hidden="true">4</span>
+          <div>
+            <h3>Plecați la drum</h3>
+            <p>Ridicați mașina și vă vedeți de drum.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section section-panel" id="program">
       <div class="two-col">
         <div>
           <div class="section-head">
