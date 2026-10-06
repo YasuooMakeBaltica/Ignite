@@ -75,6 +75,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`The Ignition Union is running at http://localhost:${PORT}`);
+  console.log(`Ignition Union Studio is running at http://localhost:${PORT}`);
   console.log("Discord invite: " + discordInvite);
 });

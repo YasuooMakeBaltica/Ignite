@@ -1,7 +1,7 @@
 {
-  "name": "the-ignition-union",
+  "name": "ignition-union-studio",
   "version": "1.0.0",
-  "description": "Website for The Ignition Union (codename: Ignite).",
+  "description": "Website for Ignition Union Studio (codename: Ignite).",
   "private": true,
   "main": "server.js",
   "scripts": {

@@ -1,12 +1,12 @@
-# The Ignition Union
+# Ignition Union Studio
 
 **Sparking ideas into websites that work.**
 
-> *Ignite* is the project's codename. **The Ignition Union** is the brand.
+> *Ignite* is the project's codename. **Ignition Union Studio** is the brand.
 
 ## About
 
-The Ignition Union is a website-building business. We design and develop fast, accessible, professionally crafted websites for clients who want a strong presence online. This repository contains the source for The Ignition Union's own website, the home of our brand, our services, and our work.
+Ignition Union Studio is a website-building business serving clients worldwide. We design and develop fast, accessible, professionally crafted websites for clients who want a strong presence online. This repository contains the source for Ignition Union Studio's own website, the home of our brand, our services, and our work.
 
 The site is built with HTML, CSS, and JavaScript, with no frameworks or build step, so it stays lightweight, quick to load, and easy to maintain.
 
@@ -86,7 +86,7 @@ Ignite/
 
 ## Brand
 
-- **Name:** The Ignition Union
+- **Name:** Ignition Union Studio
 - **Codename:** Ignite
 - **Tagline:** Sparking ideas into websites that work.
 
@@ -101,4 +101,4 @@ Logo files, colors, and typography will be documented here once they are finaliz
 
 ## License
 
-All rights reserved © The Ignition Union. A formal license has not been chosen yet.
+All rights reserved © Ignition Union Studio. A formal license has not been chosen yet.
