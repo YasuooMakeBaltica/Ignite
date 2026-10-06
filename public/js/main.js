@@ -11,6 +11,9 @@
   function clamp01(n) { return Math.min(1, Math.max(0, n)); }
   function lerp(a, b, t) { return a + (b - a) * t; }
 
+  var RO = window.IUS_RO || {};
+  var lang = "en";
+
   var header = document.getElementById("site-header");
   var progress = document.getElementById("scroll-progress");
   var hero = document.getElementById("top");
@@ -22,10 +25,15 @@
   var toggle = document.getElementById("menu-toggle");
   var nav = document.getElementById("nav");
   var navLinks = Array.prototype.slice.call(nav.querySelectorAll("a"));
+  var menuOpen = false;
+  function menuLabel(open) {
+    return lang === "ro" ? (open ? RO["menu.close"] : RO["menu.open"]) : (open ? "Close menu" : "Open menu");
+  }
   function setMenu(open) {
+    menuOpen = open;
     nav.classList.toggle("open", open);
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    toggle.setAttribute("aria-label", menuLabel(open));
   }
   toggle.addEventListener("click", function () {
     setMenu(toggle.getAttribute("aria-expanded") !== "true");
@@ -88,6 +96,7 @@
   }
 
   // Header border and page progress bar (cheap, no layout reads while scrolling)
+  var measureReady = false;
   var maxScroll = 1;
   var scrollQueued = false;
   function updateScrollUi() {
@@ -242,8 +251,76 @@
   }
 
   // ------------------------------------------------------------------
+  // Language: English (default, written in index.html) and Romanian
+  // ------------------------------------------------------------------
+  var i18nNodes = Array.prototype.map.call(document.querySelectorAll("[data-i18n]"), function (el) {
+    return { el: el, key: el.getAttribute("data-i18n"), en: el.textContent };
+  });
+  var ariaNodes = Array.prototype.map.call(document.querySelectorAll("[data-i18n-aria]"), function (el) {
+    return { el: el, key: el.getAttribute("data-i18n-aria"), en: el.getAttribute("aria-label") };
+  });
+  var metaNodes = [
+    { el: document.querySelector('meta[name="description"]'), key: "meta.description" },
+    { el: document.querySelector('meta[property="og:title"]'), key: "meta.title" },
+    { el: document.querySelector('meta[property="og:description"]'), key: "meta.ogdescription" }
+  ].filter(function (m) { return m.el; }).map(function (m) {
+    m.en = m.el.getAttribute("content");
+    return m;
+  });
+  var enTitle = document.title;
+  var langButtons = Array.prototype.slice.call(document.querySelectorAll(".lang button"));
+  var whatsappLinks = Array.prototype.slice.call(document.querySelectorAll('a[href^="https://wa.me/"]'));
+  var EN_WHATSAPP = "Hi! I'd like a quote for a website.";
+
+  function setLang(next, persist) {
+    lang = next === "ro" ? "ro" : "en";
+    root.lang = lang;
+
+    i18nNodes.forEach(function (n) {
+      n.el.textContent = lang === "ro" && RO[n.key] ? RO[n.key] : n.en;
+    });
+    ariaNodes.forEach(function (n) {
+      n.el.setAttribute("aria-label", lang === "ro" && RO[n.key] ? RO[n.key] : n.en);
+    });
+    metaNodes.forEach(function (m) {
+      m.el.setAttribute("content", lang === "ro" && RO[m.key] ? RO[m.key] : m.en);
+    });
+    document.title = lang === "ro" ? RO["meta.title"] : enTitle;
+
+    var message = lang === "ro" ? RO["wa.message"] : EN_WHATSAPP;
+    whatsappLinks.forEach(function (a) {
+      a.setAttribute("href", "https://wa.me/40765083433?text=" + encodeURIComponent(message));
+    });
+
+    langButtons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang));
+    });
+    toggle.setAttribute("aria-label", menuLabel(menuOpen));
+
+    if (persist) {
+      try { window.localStorage.setItem("ius-lang", lang); } catch (e) { /* private mode: fine */ }
+    }
+    if (typeof measure === "function" && measureReady) measure(); // text length changes the layout
+  }
+
+  langButtons.forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.getAttribute("data-lang"), true); });
+  });
+
+  function initialLang() {
+    try {
+      var saved = window.localStorage.getItem("ius-lang");
+      if (saved === "ro" || saved === "en") return saved;
+    } catch (e) { /* ignore */ }
+    var prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
+    return String(prefs[0]).toLowerCase().indexOf("ro") === 0 ? "ro" : "en";
+  }
+
+  // ------------------------------------------------------------------
   // Start
   // ------------------------------------------------------------------
+  setLang(initialLang(), false);
+  measureReady = true;
   measure();
   renderHero(performance.now(), 0);
   kick();

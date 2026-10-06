@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
   <header class="site-header" id="site-header">
@@ -54,13 +54,19 @@
       <span class="brand-name">Ignition Union Studio</span>
     </a>
 
-    <nav class="nav" id="nav" aria-label="Main">
-      <a href="#services">Services</a>
-      <a href="#process">Process</a>
-      <a href="#contact">Contact</a>
+    <nav class="nav" id="nav" aria-label="Main" data-i18n-aria="nav.label">
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#process" data-i18n="nav.process">Process</a>
+      <a href="#packages" data-i18n="nav.packages">Packages</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
     </nav>
 
-    <a class="btn btn-primary btn-small header-cta" href="#contact">Start a project</a>
+    <div class="lang" role="group" aria-label="Language" data-i18n-aria="lang.label">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="ro" aria-pressed="false">RO</button>
+    </div>
+
+    <a class="btn btn-primary btn-small header-cta" href="#contact" data-i18n="cta.start">Start a project</a>
 
     <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
       <span></span><span></span>
@@ -70,17 +76,17 @@
   <main id="main">
     <section class="hero" id="top">
         <div class="hero-copy">
-    <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Web design &amp; development</p>
+    <p class="eyebrow"><span class="dot" aria-hidden="true"></span><span data-i18n="hero.eyebrow">Web design &amp; development</span></p>
     <h1>Ignition Union <span class="accent">Studio</span></h1>
-    <p class="tagline">Sparking ideas into websites that work.</p>
-    <p class="lead">We design and build fast, accessible, professionally crafted websites for businesses and communities around the world.</p>
+    <p class="tagline" data-i18n="hero.tagline">Sparking ideas into websites that work.</p>
+    <p class="lead" data-i18n="hero.lead">We design and build fast, accessible, professionally crafted websites for businesses and communities around the world.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="#contact">Start a project</a>
+      <a class="btn btn-primary" href="#contact" data-i18n="cta.start">Start a project</a>
     </div>
-    <ul class="pills" aria-label="What we focus on">
-      <li>Fast</li>
-      <li>Accessible</li>
-      <li>Responsive</li>
+    <ul class="pills" aria-label="What we focus on" data-i18n-aria="hero.pills.label">
+      <li data-i18n="pill.fast">Fast</li>
+      <li data-i18n="pill.accessible">Accessible</li>
+      <li data-i18n="pill.responsive">Responsive</li>
     </ul>
         </div>
 
@@ -109,86 +115,125 @@
 
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
-        <span>Design</span><span>Development</span><span>Performance</span><span>Accessibility</span><span>Support</span>
-        <span>Design</span><span>Development</span><span>Performance</span><span>Accessibility</span><span>Support</span>
-        <span>Design</span><span>Development</span><span>Performance</span><span>Accessibility</span><span>Support</span>
-        <span>Design</span><span>Development</span><span>Performance</span><span>Accessibility</span><span>Support</span>
+        <span data-i18n="tick.design">Design</span><span data-i18n="tick.development">Development</span><span data-i18n="tick.performance">Performance</span><span data-i18n="tick.accessibility">Accessibility</span><span data-i18n="tick.support">Support</span>
+        <span data-i18n="tick.design">Design</span><span data-i18n="tick.development">Development</span><span data-i18n="tick.performance">Performance</span><span data-i18n="tick.accessibility">Accessibility</span><span data-i18n="tick.support">Support</span>
+        <span data-i18n="tick.design">Design</span><span data-i18n="tick.development">Development</span><span data-i18n="tick.performance">Performance</span><span data-i18n="tick.accessibility">Accessibility</span><span data-i18n="tick.support">Support</span>
+        <span data-i18n="tick.design">Design</span><span data-i18n="tick.development">Development</span><span data-i18n="tick.performance">Performance</span><span data-i18n="tick.accessibility">Accessibility</span><span data-i18n="tick.support">Support</span>
       </div>
     </div>
 
     <section class="section" id="services" data-nav="services">
       <div class="section-head" data-fx>
-        <p class="kicker">Services</p>
-        <h2>Everything your site needs to perform.</h2>
-        <p class="section-lead">From the first sketch to launch day and beyond, we handle the details so your site looks sharp and runs fast.</p>
+        <p class="kicker" data-i18n="nav.services">Services</p>
+        <h2 data-i18n="services.title">Everything your site needs to perform.</h2>
+        <p class="section-lead" data-i18n="services.lead">From the first sketch to launch day and beyond, we handle the details so your site looks sharp and runs fast.</p>
       </div>
 
       <div class="cards">
         <article class="card" data-fx>
           <span class="card-num">01</span>
-          <h3>Custom design</h3>
-          <p>Layouts and visual identity tailored to your brand, not a template with your logo dropped in.</p>
+          <h3 data-i18n="services.1.title">Custom design</h3>
+          <p data-i18n="services.1.text">Layouts and visual identity tailored to your brand, not a template with your logo dropped in.</p>
         </article>
         <article class="card" data-fx>
           <span class="card-num">02</span>
-          <h3>Development</h3>
-          <p>Clean, hand-written HTML, CSS, and JavaScript that is lightweight and easy to maintain.</p>
+          <h3 data-i18n="services.2.title">Development</h3>
+          <p data-i18n="services.2.text">Clean, hand-written HTML, CSS, and JavaScript that is lightweight and easy to maintain.</p>
         </article>
         <article class="card" data-fx>
           <span class="card-num">03</span>
-          <h3>Speed and accessibility</h3>
-          <p>Optimized assets and semantic markup so every visitor gets a quick, usable experience.</p>
+          <h3 data-i18n="services.3.title">Speed and accessibility</h3>
+          <p data-i18n="services.3.text">Optimized assets and semantic markup so every visitor gets a quick, usable experience.</p>
         </article>
         <article class="card" data-fx>
           <span class="card-num">04</span>
-          <h3>Care and support</h3>
-          <p>Updates, fixes, and improvements after launch, so your site keeps pace with your business.</p>
+          <h3 data-i18n="services.4.title">Care and support</h3>
+          <p data-i18n="services.4.text">Updates, fixes, and improvements after launch, so your site keeps pace with your business.</p>
         </article>
       </div>
     </section>
 
     <section class="section section-alt" id="process" data-nav="process">
       <div class="section-head" data-fx>
-        <p class="kicker">Process</p>
-        <h2>A simple path from idea to launch.</h2>
+        <p class="kicker" data-i18n="process.kicker">Process</p>
+        <h2 data-i18n="process.title">A simple path from idea to launch.</h2>
       </div>
 
       <ol class="steps">
         <li class="step" data-fx>
           <span class="step-num"><b>1</b></span>
-          <h3>Discover</h3>
-          <p>We learn your goals, audience, and what success looks like.</p>
+          <h3 data-i18n="process.1.title">Discover</h3>
+          <p data-i18n="process.1.text">We learn your goals, audience, and what success looks like.</p>
         </li>
         <li class="step" data-fx>
           <span class="step-num"><b>2</b></span>
-          <h3>Design</h3>
-          <p>We shape the look and structure, and refine it with your feedback.</p>
+          <h3 data-i18n="process.2.title">Design</h3>
+          <p data-i18n="process.2.text">We shape the look and structure, and refine it with your feedback.</p>
         </li>
         <li class="step" data-fx>
           <span class="step-num"><b>3</b></span>
-          <h3>Build</h3>
-          <p>We turn the design into a fast, responsive, accessible site.</p>
+          <h3 data-i18n="process.3.title">Build</h3>
+          <p data-i18n="process.3.text">We turn the design into a fast, responsive, accessible site.</p>
         </li>
         <li class="step" data-fx>
           <span class="step-num"><b>4</b></span>
-          <h3>Launch</h3>
-          <p>We test, go live, and stay on hand for whatever comes next.</p>
+          <h3 data-i18n="process.4.title">Launch</h3>
+          <p data-i18n="process.4.text">We test, go live, and stay on hand for whatever comes next.</p>
         </li>
       </ol>
+    </section>
+
+    <section class="section" id="packages" data-nav="packages">
+      <div class="section-head" data-fx>
+        <p class="kicker" data-i18n="packages.kicker">Packages</p>
+        <h2 data-i18n="packages.title">A simple starter website for your local business.</h2>
+        <p class="section-lead" data-i18n="packages.lead">A fixed-scope, mobile-friendly website so customers can find you, see your hours and contact you in one tap.</p>
+      </div>
+
+      <div class="package" data-fx>
+        <div class="package-main">
+          <span class="badge" data-i18n="packages.badge">Starter</span>
+          <h3 data-i18n="packages.name">Starter Website</h3>
+          <p class="price-from" data-i18n="packages.from">Starting prices for local businesses</p>
+          <p class="price" data-i18n="packages.price">Custom quote</p>
+          <p class="price-note" data-i18n="packages.note">You get a fixed price in writing before we start.</p>
+          <div class="package-actions">
+            <a class="btn btn-primary" id="package-whatsapp" href="https://wa.me/40765083433" target="_blank" rel="noopener noreferrer" data-i18n="packages.whatsapp">Get a quote on WhatsApp</a>
+            <a class="btn btn-outline" href="tel:+40765083433"><span data-i18n="packages.call">Call</span> +40 765 083 433</a>
+          </div>
+        </div>
+
+        <div class="package-list">
+          <h4 data-i18n="packages.included">What is included</h4>
+          <ul class="checks">
+            <li data-i18n="packages.inc.1">One-page website that works on any phone</li>
+            <li data-i18n="packages.inc.2">Your services, opening hours, address and map</li>
+            <li data-i18n="packages.inc.3">Call and WhatsApp buttons for customers</li>
+            <li data-i18n="packages.inc.4">Basic setup to appear in Google search</li>
+            <li data-i18n="packages.inc.5">Hosting and domain connection (domain at cost)</li>
+            <li data-i18n="packages.inc.6">Up to 2 rounds of changes</li>
+            <li data-i18n="packages.inc.7">Delivered in about a week</li>
+          </ul>
+          <p class="package-terms" data-i18n="packages.terms">50% deposit to start, 50% on delivery. The site is yours once it is fully paid.</p>
+          <p class="package-more" data-i18n="packages.more">Need more pages, a shop or bookings? Ask for a custom package.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section" id="contact" data-nav="contact">
       <div class="contact" data-fx>
         <div class="contact-copy">
-          <p class="kicker">Contact</p>
-          <h2>Ready to ignite your idea?</h2>
-          <p class="section-lead">Join our Discord server to talk with the team, ask questions, and start your project.</p>
+          <p class="kicker" data-i18n="contact.kicker">Contact</p>
+          <h2 data-i18n="contact.title">Ready to ignite your idea?</h2>
+          <p class="section-lead" data-i18n="contact.lead">Message or call us, or join our Discord, to talk about your project.</p>
         </div>
 
         <div class="discord-panel">
+          <a class="btn btn-whatsapp" id="whatsapp-link" href="https://wa.me/40765083433" target="_blank" rel="noopener noreferrer" data-i18n="contact.whatsapp">Message us on WhatsApp</a>
+          <a class="btn btn-outline btn-call" href="tel:+40765083433"><span data-i18n="contact.call">Call</span> +40 765 083 433</a>
           <a class="btn btn-discord" id="discord-link" href="https://discord.gg/sxtfMfxtHq" target="_blank" rel="noopener noreferrer">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3a14.7 14.7 0 0 0-.68 1.396 18.27 18.27 0 0 0-5.487 0A14.5 14.5 0 0 0 9.036 3a19.74 19.74 0 0 0-4.433 1.37C1.8 8.6.96 12.72 1.38 16.78a19.9 19.9 0 0 0 5.993 3.03 14.6 14.6 0 0 0 1.283-2.085 12.9 12.9 0 0 1-2.02-.97c.17-.124.335-.253.495-.385a14.2 14.2 0 0 0 12.14 0c.16.132.325.261.495.385-.646.385-1.32.71-2.02.97.37.73.8 1.43 1.283 2.085a19.86 19.86 0 0 0 5.993-3.03c.49-4.7-.836-8.78-3.682-12.411ZM8.68 14.31c-1.18 0-2.15-1.08-2.15-2.4 0-1.32.95-2.4 2.15-2.4 1.21 0 2.17 1.09 2.15 2.4 0 1.32-.95 2.4-2.15 2.4Zm6.64 0c-1.18 0-2.15-1.08-2.15-2.4 0-1.32.95-2.4 2.15-2.4 1.21 0 2.17 1.09 2.15 2.4 0 1.32-.94 2.4-2.15 2.4Z"/></svg>
-            <span>Join our Discord</span>
+            <span data-i18n="contact.discord">Join our Discord</span>
           </a>
         </div>
       </div>
@@ -197,9 +242,10 @@
 
   <footer class="site-footer">
     <p class="footer-brand">Ignition Union Studio</p>
-    <p class="footer-copy">&copy; <span id="year">2026</span> Ignition Union Studio. All rights reserved.</p>
+    <p class="footer-copy">&copy; <span id="year">2026</span> Ignition Union Studio. <span data-i18n="footer.rights">All rights reserved.</span></p>
   </footer>
 
+  <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
