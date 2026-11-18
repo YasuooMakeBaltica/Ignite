@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section id="join" class="panel">
+    <h1>Join a room</h1>
+    <p class="hint">Pick a name and a room. Anyone who types the same room name ends up in the same chat.</p>
+    <form id="join-form">
+      <label>Nickname <input id="nick" maxlength="20" required autocomplete="off"></label>
+      <label>Room <input id="room" maxlength="24" value="general" required autocomplete="off" pattern="[A-Za-z0-9\-]+"></label>
+      <button type="submit">Enter</button>
+    </form>
+  </section>
+
+  <section id="chat" class="chat" hidden>
+    <header>
+      <strong id="room-name"></strong>
+      <span id="online" class="online"></span>
+      <button id="leave" type="button">Leave</button>
+    </header>
+    <ol id="log" aria-live="polite"></ol>
+    <form id="send-form">
+      <input id="text" maxlength="500" placeholder="Write a message" autocomplete="off" required>
+      <button type="submit">Send</button>
+    </form>
+    <p id="status" role="status"></p>
+  </section>
+  <script src="app.js"></script>
+</body>
+</html>
