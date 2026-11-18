@@ -7,8 +7,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <h1>Shorten a link</h1>
+  <main id="login" hidden>
+    <h1>Private</h1>
+    <form id="login-form" class="login">
+      <input id="password" type="password" placeholder="Password" required autocomplete="current-password">
+      <button type="submit">Log in</button>
+    </form>
+    <p id="login-msg" role="status"></p>
+  </main>
+  <main id="app" hidden>
+    <h1>Shorten a link <button type="button" id="logout" class="ghost">Log out</button></h1>
     <form id="form">
       <input id="url" type="url" placeholder="https://a-very-long-link.com/with/a/path" required autocomplete="off">
       <input id="alias" type="text" placeholder="custom name (optional)" maxlength="32" autocomplete="off">

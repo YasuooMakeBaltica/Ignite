@@ -31,3 +31,16 @@ li { display: grid; grid-template-columns: 1fr auto auto; gap: 1rem; align-items
   .actions { grid-column: 1 / -1; }
   .orig { max-width: 60vw; }
 }
+
+[hidden] { display: none !important; }
+.login { grid-template-columns: 1fr auto; max-width: 420px; }
+#login-msg { color: var(--red); }
+h1 .ghost { float: right; font-size: 0.8rem; padding: 0.4rem 0.8rem; background: #272a35; color: var(--text); margin-top: 0.6rem; }
+li.open { grid-template-rows: auto auto; }
+.panel { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 0.8rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem 1.2rem; font-size: 0.85rem; }
+.panel h3 { margin: 0 0 0.3rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.panel .row { display: flex; justify-content: space-between; gap: 0.5rem; }
+.panel .row span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.panel .wide { grid-column: 1 / -1; color: var(--muted); }
+.actions .stat { background: #3a3320; color: var(--accent); }
+@media (max-width: 640px) { .panel { grid-template-columns: 1fr 1fr; } }

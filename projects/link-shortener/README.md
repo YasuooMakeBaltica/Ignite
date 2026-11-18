@@ -6,11 +6,27 @@ A tiny link shortener with click stats. No dependencies, just Node 18 or newer.
 node server.js
 ```
 
-Open http://localhost:3200. Set `PORT` to change the port.
+Open http://localhost:3200 and log in.
 
-- Paste a link, optionally pick a custom name, and get a short link.
-- Each short link counts clicks and shows the last 7 days as small bars.
-- Links are saved in `data.json` next to the server.
+## Private by default
+
+- The page and every `/api` route need a password. Only the short links themselves (`/yourcode`) are public, because they have to work for whoever you send them to.
+- Set the password with `ADMIN_PASSWORD`. If you do not, a random one is printed when the server starts.
+
+```bash
+ADMIN_PASSWORD="something long and unique" node server.js
+```
+
+- Login is limited to 5 attempts a minute, and the session cookie is `HttpOnly` and `SameSite=Strict`.
+- Behind a proxy (like a host that adds `X-Forwarded-For`), set `TRUST_PROXY=1` so the real visitor address is used. Do not set it otherwise, because anyone could fake that header.
+
+## What it tracks
+
+For each click it keeps the time, the website the visitor came from, browser, system and device type, the first part of the IP address (the last part is cut off, like `203.0.113.0`) and a visitor code that changes every day. It does not keep the full IP address, and link previews from chat apps and bots are not counted as clicks. The `/privacy` page says the same in plain words.
+
+Why not the full IP: it is personal data under EU rules, so storing it needs a clear reason and a notice, and the stats above already answer the useful questions.
+
+## Other details
+
+- Links and stats are saved in `data.json` next to the server. Only the last 1000 clicks per link are kept.
 - Only http and https links are accepted, and creating links is limited to 20 per minute per address.
-
-This version has no login, so anyone who can open the page can create and delete links. Keep it on your own computer, or add a password before putting it online.

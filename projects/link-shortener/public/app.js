@@ -5,6 +5,59 @@
   var msg = document.getElementById("msg");
   var list = document.getElementById("list");
   var empty = document.getElementById("empty");
+  var loginView = document.getElementById("login");
+  var appView = document.getElementById("app");
+  var loginForm = document.getElementById("login-form");
+  var loginMsg = document.getElementById("login-msg");
+  var pollTimer = null;
+
+  function show(loggedIn) {
+    loginView.hidden = loggedIn;
+    appView.hidden = !loggedIn;
+    if (loggedIn) { load(); clearInterval(pollTimer); pollTimer = setInterval(load, 15000); }
+    else clearInterval(pollTimer);
+  }
+  function api(url, opts) {
+    return fetch(url, opts).then(function (r) {
+      if (r.status === 401 && url !== "/api/login") { show(false); throw new Error("auth"); }
+      return r;
+    });
+  }
+
+  function statBlock(title, items) {
+    var box = document.createElement("div");
+    var h = document.createElement("h3");
+    h.textContent = title;
+    box.appendChild(h);
+    if (!items.length) { var none = document.createElement("div"); none.textContent = "none yet"; box.appendChild(none); }
+    items.forEach(function (it) {
+      var r = document.createElement("div"); r.className = "row";
+      var a1 = document.createElement("span"); a1.textContent = it.name;
+      var a2 = document.createElement("span"); a2.textContent = it.n;
+      r.appendChild(a1); r.appendChild(a2); box.appendChild(r);
+    });
+    return box;
+  }
+
+  function toggleStats(li, code, btn) {
+    var existing = li.querySelector(".panel");
+    if (existing) { existing.remove(); btn.textContent = "Stats"; return; }
+    api("/api/links/" + encodeURIComponent(code) + "/stats").then(function (r) { return r.json(); }).then(function (s) {
+      var p = document.createElement("div");
+      p.className = "panel";
+      p.appendChild(statBlock("Websites", s.referrers));
+      p.appendChild(statBlock("Browsers", s.browsers));
+      p.appendChild(statBlock("Systems", s.systems));
+      p.appendChild(statBlock("Devices", s.devices));
+      p.appendChild(statBlock("Networks (last part hidden)", s.networks));
+      var w = document.createElement("div");
+      w.className = "wide";
+      w.textContent = s.unique + " unique visitors (a new anonymous code each day), " + s.bots + " link previews and bots not counted";
+      p.appendChild(w);
+      li.appendChild(p);
+      btn.textContent = "Hide";
+    }).catch(function () {});
+  }
 
   function say(text, ok) { msg.textContent = text; msg.className = ok ? "ok" : ""; }
 
@@ -49,26 +102,29 @@
     var del = document.createElement("button");
     del.type = "button"; del.className = "del"; del.textContent = "Delete";
     del.addEventListener("click", function () {
-      fetch("/api/links/" + encodeURIComponent(l.code), { method: "DELETE" }).then(load);
+      api("/api/links/" + encodeURIComponent(l.code), { method: "DELETE" }).then(load).catch(function () {});
     });
-    actions.appendChild(copy); actions.appendChild(del);
+    var stat = document.createElement("button");
+    stat.type = "button"; stat.className = "stat"; stat.textContent = "Stats";
+    stat.addEventListener("click", function () { toggleStats(li, l.code, stat); });
+    actions.appendChild(stat); actions.appendChild(copy); actions.appendChild(del);
 
     li.appendChild(left); li.appendChild(stats); li.appendChild(actions);
     return li;
   }
 
   function load() {
-    fetch("/api/links").then(function (r) { return r.json(); }).then(function (links) {
+    api("/api/links").then(function (r) { return r.json(); }).then(function (links) {
       list.textContent = "";
       links.forEach(function (l) { list.appendChild(row(l)); });
       empty.hidden = links.length > 0;
-    });
+    }).catch(function () {});
   }
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     say("");
-    fetch("/api/links", {
+    api("/api/links", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url: urlInput.value, alias: aliasInput.value })
@@ -78,9 +134,26 @@
         say("Created: " + res.d.short, true);
         urlInput.value = ""; aliasInput.value = "";
         load();
-      }).catch(function () { say("Could not reach the server."); });
+      }).catch(function (err) { if (!err || err.message !== "auth") say("Could not reach the server."); });
   });
 
-  load();
-  setInterval(load, 15000);
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    loginMsg.textContent = "";
+    api("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: document.getElementById("password").value })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { loginMsg.textContent = res.d.error || "Wrong password."; return; }
+        document.getElementById("password").value = "";
+        show(true);
+      });
+  });
+  document.getElementById("logout").addEventListener("click", function () {
+    fetch("/api/logout", { method: "POST" }).then(function () { show(false); });
+  });
+
+  fetch("/api/me").then(function (r) { show(r.ok); });
 })();
