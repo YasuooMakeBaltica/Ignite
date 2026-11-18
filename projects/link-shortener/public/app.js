@@ -50,9 +50,12 @@
       p.appendChild(statBlock("Systems", s.systems));
       p.appendChild(statBlock("Devices", s.devices));
       p.appendChild(statBlock("Networks (last part hidden)", s.networks));
+      p.appendChild(statBlock("Countries", s.countries));
+      p.appendChild(statBlock("Cities", s.cities));
+      if (s.ask) p.appendChild(statBlock("Shared location (about 10 km)", s.areas));
       var w = document.createElement("div");
       w.className = "wide";
-      w.textContent = s.unique + " unique visitors (a new anonymous code each day), " + s.bots + " link previews and bots not counted";
+      w.textContent = s.unique + " unique visitors (a new anonymous code each day), " + s.bots + " link previews and bots not counted" + (s.ask ? ". " + s.shared + " of " + s.asked + " visitors agreed to share their location." : "");
       p.appendChild(w);
       li.appendChild(p);
       btn.textContent = "Hide";
@@ -74,9 +77,11 @@
     var left = document.createElement("div");
     var a = document.createElement("a");
     a.className = "short"; a.href = l.short; a.target = "_blank"; a.rel = "noopener"; a.textContent = l.short.replace(/^https?:\/\//, "");
+    var tag = null;
+    if (l.ask) { tag = document.createElement("span"); tag.className = "tag"; tag.textContent = "asks location"; }
     var orig = document.createElement("div");
     orig.className = "orig"; orig.textContent = l.url; orig.title = l.url;
-    left.appendChild(a); left.appendChild(orig);
+    left.appendChild(a); if (tag) left.appendChild(tag); left.appendChild(orig);
 
     var stats = document.createElement("div");
     stats.className = "stats";
@@ -127,7 +132,7 @@
     api("/api/links", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: urlInput.value, alias: aliasInput.value })
+      body: JSON.stringify({ url: urlInput.value, alias: aliasInput.value, ask: document.getElementById("ask").checked })
     }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
         if (!res.ok) return say(res.d.error || "Something went wrong.");

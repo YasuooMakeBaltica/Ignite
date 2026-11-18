@@ -26,6 +26,14 @@ For each click it keeps the time, the website the visitor came from, browser, sy
 
 Why not the full IP: it is personal data under EU rules, so storing it needs a clear reason and a notice, and the stats above already answer the useful questions.
 
+## Location (opt in)
+
+- **Country and city from the host.** When `TRUST_PROXY=1` and the server sits behind Cloudflare or Vercel, the country and city those hosts add as headers are saved with each click. No IP lookup service is used, and nothing is stored when the headers are missing.
+- **Ask for location per link.** Tick "Ask visitors to share their approximate location" when you create a link. Visitors then see a short page first with **Share approximate location** and **No thanks, continue**. Both go to the destination. If they share, the browser asks for permission and only a rounded area (about 10 km) is kept, shown as "near Bucharest" for Romanian cities and as plain coordinates elsewhere. If they say no, nothing is stored.
+- The stats show how many visitors agreed out of how many were asked.
+- Browsers only allow location on `https://` pages (or `localhost`), so use https when it is online.
+- Link previews and bots skip the page and get a normal redirect.
+
 ## Other details
 
 - Links and stats are saved in `data.json` next to the server. Only the last 1000 clicks per link are kept.
